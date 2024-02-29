@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 // import Helmet from "react-helmet"
 
-import { Home, About, Leaders } from './pages';
+import { Home, About, Leaders, SignUp } from './pages';
 import './styles/main.css';
 
 const router = createBrowserRouter([
@@ -23,6 +23,11 @@ const router = createBrowserRouter([
   {
     path: "/leaders",
     element: <Leaders />,
+    errorElement: <h1>Something went wrong</h1>,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
     errorElement: <h1>Something went wrong</h1>,
   },
 ]);

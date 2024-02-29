@@ -1,0 +1,17 @@
+.text-loop {
+  position: relative;
+}
+
+.text-item {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.25s linear, transform 0.5s ease-in-out;
+  transform: translateY(-50px);
+}
+
+.text-item.visible {
+  transition: opacity 0.5s linear;
+  opacity: 1;
+  transform: translateY(0px);
+}

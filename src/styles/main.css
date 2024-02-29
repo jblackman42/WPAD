@@ -824,8 +824,15 @@ footer a:hover, footer p:hover {
   place-items: end;
 }
 .calendar-container .calendar #days-grid .calendar-day .community {
-  margin: 0 0.5rem;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  padding-top: 25px;
+  box-sizing: border-box;
   text-align: center;
+}
+.calendar-container .calendar #days-grid .calendar-day .community p {
+  margin: 0;
 }
 .calendar-container .calendar #days-grid .calendar-day .community .community-name {
   font-weight: bold;
@@ -964,8 +971,6 @@ footer a:hover, footer p:hover {
   z-index: 9999;
   display: grid;
   place-items: center;
-  visibility: hidden;
-  display: none;
 }
 .calendar-container .loader {
   border: 16px solid rgba(0, 0, 0, 0.1333333333);
@@ -993,8 +998,6 @@ footer a:hover, footer p:hover {
   font-size: clamp(1rem, 6vw, 2rem);
   display: grid;
   place-items: center;
-  visibility: hidden;
-  display: none;
   z-index: 999;
 }
 #loadingScreen h3 {
@@ -1182,6 +1185,24 @@ footer a:hover, footer p:hover {
   visibility: visible;
 }
 
+.text-loop {
+  position: relative;
+}
+
+.text-item {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.25s linear, transform 0.5s ease-in-out;
+  transform: translateY(-50px);
+}
+
+.text-item.visible {
+  transition: opacity 0.5s linear;
+  opacity: 1;
+  transform: translateY(0px);
+}
+
 .home-content {
   display: flex;
   gap: 4rem;
@@ -1357,9 +1378,10 @@ footer a:hover, footer p:hover {
   position: relative;
   margin-right: 1.2em;
 }
-#sign-up-form > .recurring-container input, #sign-up-form > .recurring-container select {
+#sign-up-form > .recurring-container input,
+#sign-up-form > .recurring-container select {
   padding: 0.5rem 0.25rem;
-  margin: 4px 0;
+  margin: 4px;
   border: none;
   border-radius: 2px;
   background-color: white;
@@ -1368,7 +1390,8 @@ footer a:hover, footer p:hover {
 #sign-up-form > .recurring-container input[type=number] {
   width: 50px;
 }
-#sign-up-form > .recurring-container input:disabled, #sign-up-form > .recurring-container select:disabled {
+#sign-up-form > .recurring-container input:disabled,
+#sign-up-form > .recurring-container select:disabled {
   opacity: 0.5;
 }
 #sign-up-form > .recurring-container input[type=checkbox]:not(:checked) ~ #update-icon-container {
