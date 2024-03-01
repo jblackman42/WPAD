@@ -11,6 +11,7 @@ const hour = urlParams.get('hour');
 const SignUp = () => {
   const [allCommunityReservations, setAllCommunityReservations] = useState(null);
   const [allPrayerSchedules, setAllPrayerSchedules] = useState(null);
+  const [hoursCovered, setHoursCovered] = useState([]);
   const [allCommunities, setAllCommunities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hightlightSequence, setHightlightSequence] = useState(false);
@@ -99,6 +100,7 @@ const SignUp = () => {
 
   useEffect(() => {
     if (allPrayerSchedules === null || allCommunityReservations === null || allCommunities.length === 0) return;
+    setHoursCovered(allPrayerSchedules.map(schedule => new Date(new Date(schedule.Start_Date).getTime() - ((new Date(schedule.Start_Date).getTimezoneOffset() - 420) * 60000)).getHours()));
     setIsLoading(false);
   }, [allPrayerSchedules, allCommunityReservations, allCommunities]);
 
@@ -155,7 +157,7 @@ const SignUp = () => {
         <div className="dropdown-container">
             <label htmlFor="Community_ID">Community:</label>
             <select name="Community_ID" id="Community_ID" value={community} onChange={(e) => setCommunity(e.target.value)} required>
-              <option value="" selected disabled>Choose One...</option>
+              <option value="" disabled>Choose One...</option>
               {allCommunities.map((community, i) => <option value={community.WPAD_Community_ID} key={i}>{community.Community_Name}</option>)}
             </select>
         </div>
@@ -199,13 +201,42 @@ const SignUp = () => {
                 </div>
             </div>
         </div>
+        <div className="reminder-container">
+          <label>Reminder Notifications:</label>
+
+          <div className="reminder-option" title="Text me 5 minutes before my time to pray.">
+            <input type="checkbox" name="5m-reminder" id="5m-reminder" />
+            <label htmlFor="5m-reminder">Text - 5 Minutes</label>
+          </div>
+
+          <div className="reminder-option" title="Text me 1 hour before my time to pray.">
+            <input type="checkbox" name="1h-reminder" id="1h-reminder" />
+            <label htmlFor="1h-reminder">Text - 1 Hour</label>
+          </div>
+
+          <div className="reminder-option" title="Text me 24 hours before my time to pray.">
+            <input type="checkbox" name="24h-reminder" id="24h-reminder" />
+            <label htmlFor="24h-reminder">Text - 24 Hours</label>
+          </div>
+
+          <div className="reminder-option" title="Email me 3 days before my time to pray.">
+            <input type="checkbox" name="3d-reminder" id="3d-reminder" />
+            <label htmlFor="3d-reminder">Email - 3 Days</label>
+          </div>
+
+          <div className="reminder-option" title="Email me 7 days before my time to pray.">
+            <input type="checkbox" name="7d-reminder" id="7d-reminder" />
+            <label htmlFor="7d-reminder">Email - 7 Days</label>
+          </div>
+          
+        </div>
         <div className="time-container">
             <label>Hour of Prayer:</label>
             <div id="hours-options">
                 {hours.map((hr, i) => {
                   return (
                     <div className="checkbox-container" key={i}>
-                      <input type="radio" name="hour" value={hr} id={hr} defaultChecked={hr === parseInt(selectedHour)} onClick={(e) => setSelectedHour(e.target.value)} required />
+                      <input type="radio" name="hour" value={hr} id={hr} defaultChecked={hr === parseInt(selectedHour)} onClick={(e) => setSelectedHour(e.target.value)} className={hoursCovered.includes(hr) ? "covered" : ""} required />
                       <label htmlFor={hr}>{hr === 0 ? `12 AM` : hr === 12 ? `${hr} PM` : hr > 12 ? `${hr - 12} PM` : `${hr} AM`}</label>
                     </div>
                   )
@@ -213,8 +244,15 @@ const SignUp = () => {
             </div>
         </div>
         <div className="form-footer">
-            <p id="curr-time">Please Select an Hour of Prayer</p>
+            <p id="curr-time">{(() => {
+              const Start_Date = new Date(new Date(date).setHours(selectedHour));
+              const End_Date = new Date(new Date(Start_Date).getTime() + 3600000);
+              return selectedHour ? `Hour of Prayer: ${Start_Date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${End_Date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}` : "Please Select an Hour of Prayer";
+            })()}</p>
             <button className="btn highlight" type="submit">Submit</button>
+        </div>
+        <div className="form-legal">
+          <p style={{"fontSize": "16px", "fontStyle": "italic", "margin": "0"}}>By providing us with your phone number, you consent to receive text messages from us for the purpose of sending reminders about your scheduled time to pray. Additionally, you consent to receive a confirmation email at the provided email address. Standard messaging and data rates may apply. You may opt-out of receiving these communications at any time by contacting us directly.</p>
         </div>
     </form>
 

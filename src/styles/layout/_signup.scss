@@ -212,6 +212,31 @@ $form-gap: 1rem;
         }
     }
 
+    &>.reminder-container {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: .5rem;
+
+        .reminder-option {
+            input {
+                margin: .5rem;
+            }
+
+            &:first-of-type {
+                margin-left: auto;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            flex-direction: column;
+
+            .reminder-option {
+                margin: 0 !important;
+            }
+        }
+    }
+
     #hours-options {
         display: grid;
         grid-template-columns: repeat(12, 1fr);

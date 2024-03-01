@@ -23,6 +23,12 @@ html {
 	background-color: $primary-white;
 }
 
+#root {
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+}
+
 p,
 ol,
 ul,

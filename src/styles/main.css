@@ -331,6 +331,12 @@ html {
   background-color: #f5eee3;
 }
 
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
 p,
 ol,
 ul,
@@ -1464,6 +1470,26 @@ footer a:hover, footer p:hover {
   }
   #sign-up-form > .recurring-container #update-icon-container {
     transform: translate(0%, -50%);
+  }
+}
+#sign-up-form > .reminder-container {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+#sign-up-form > .reminder-container .reminder-option input {
+  margin: 0.5rem;
+}
+#sign-up-form > .reminder-container .reminder-option:first-of-type {
+  margin-left: auto;
+}
+@media screen and (max-width: 768px) {
+  #sign-up-form > .reminder-container {
+    flex-direction: column;
+  }
+  #sign-up-form > .reminder-container .reminder-option {
+    margin: 0 !important;
   }
 }
 #sign-up-form #hours-options {
