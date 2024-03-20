@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 // import Helmet from "react-helmet"
 
-import { Home, About, Leaders, SignUp } from './pages';
+import { Home, About, Leaders, SignUp, Register, Guide } from './pages';
 import './styles/main.css';
 
 const router = createBrowserRouter([
@@ -30,6 +30,16 @@ const router = createBrowserRouter([
     element: <SignUp />,
     errorElement: <h1>Something went wrong</h1>,
   },
+  {
+    path: "/register",
+    element: <Register />,
+    errorElement: <h1>Something went wrong</h1>,
+  },
+  {
+    path: "/guide",
+    element: <Guide />,
+    errorElement: <h1>Something went wrong</h1>,
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

@@ -4,7 +4,6 @@ import Logo from "../assets/final-logo-transparent.png"
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const guideURL = "/guide/Jan-Feb 2024.pdf"
   return (
     <nav>
       <div className="logo-container">
@@ -17,7 +16,7 @@ const Navbar = () => {
         <div className="link"><a href="/leaders">Leaders</a></div>
         <div className="link"><a href="/dashboard">Dashboard</a></div>
         <div className="link" id="logout-btn"><a href="/logout">Logout</a></div>
-        <div className="link highlight"><a href={guideURL}>Prayer Guide</a></div>
+        <div className="link highlight"><a href="/guide">Prayer Guide</a></div>
       </div>
       <div className="toggle-nav">
         <button id="toggle-nav-btn" onClick={() => setOpen(!open)}>
