@@ -1646,6 +1646,7 @@ footer a:hover, footer p:hover {
 
 .forms-container {
   font-family: Proxima-Nova;
+  margin: auto;
 }
 .forms-container #register-form {
   width: 500px;
@@ -1662,48 +1663,43 @@ footer a:hover, footer p:hover {
   color: white;
   font-size: 2em;
 }
-.forms-container #register-form > .progress {
+.forms-container #register-form > #progress {
   display: flex;
   width: 100%;
   justify-content: space-around;
   padding: 1rem 0;
   margin-bottom: 1rem;
   position: relative;
+  --progress-width: 0%;
 }
-.forms-container #register-form > .progress .step {
+.forms-container #register-form > #progress #step {
   --delay: 300ms;
-  background-color: white;
+  color: currentColor;
   padding: 10px;
   border-radius: 50%;
   z-index: 99;
-  background-color: white;
+  background-color: currentColor;
   position: relative;
-  transition: background-color 150ms linear;
+  transition: color 150ms linear;
   transition-delay: var(--delay);
 }
-.forms-container #register-form > .progress .step:nth-child(1) {
-  background-color: #fcbb09;
-}
-.forms-container #register-form > .progress .step:nth-child(1)::after {
-  color: #fcbb09;
-}
-.forms-container #register-form > .progress .step i, .forms-container #register-form > .progress .step svg {
+.forms-container #register-form > #progress #step i,
+.forms-container #register-form > #progress #step svg {
+  color: black;
   display: grid;
   place-items: center;
   width: 18px;
   height: 18px;
 }
-.forms-container #register-form > .progress .step::after {
+.forms-container #register-form > #progress #step::after {
   content: attr(data-title);
   position: absolute;
   left: 50%;
   top: 100%;
   transform: translate(-50%, 0%);
-  color: white;
-  transition: color 150ms linear;
-  transition-delay: var(--delay);
+  transition: color 50ms linear;
 }
-.forms-container #register-form > .progress::before, .forms-container #register-form > .progress::after {
+.forms-container #register-form > #progress::before, .forms-container #register-form > #progress::after {
   content: "";
   position: absolute;
   height: 2px;
@@ -1711,58 +1707,19 @@ footer a:hover, footer p:hover {
   background-color: white;
   top: calc(50% - 1px);
 }
-.forms-container #register-form > .progress::after {
+.forms-container #register-form > #progress::after {
   background-color: #fcbb09;
   left: 0;
-  width: 12.5%;
+  width: calc(12.5% + var(--progress-width));
   transition: width 300ms linear;
 }
-.forms-container #register-form > .progress.page-1::after {
-  width: 37.5%;
+.forms-container #register-form > #progress .step {
+  background-color: currentColor;
 }
-.forms-container #register-form > .progress.page-1 .step:nth-child(2) {
-  background-color: #fcbb09;
+.forms-container #register-form > #progress .step::after {
+  color: currentColor;
 }
-.forms-container #register-form > .progress.page-1 .step:nth-child(2)::after {
-  color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-2::after {
-  width: 62.5%;
-}
-.forms-container #register-form > .progress.page-2 .step:nth-child(2) {
-  background-color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-2 .step:nth-child(2)::after {
-  color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-2 .step:nth-child(3) {
-  background-color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-2 .step:nth-child(3)::after {
-  color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-3::after {
-  width: 87.5%;
-}
-.forms-container #register-form > .progress.page-3 .step:nth-child(2) {
-  background-color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-3 .step:nth-child(2)::after {
-  color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-3 .step:nth-child(3) {
-  background-color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-3 .step:nth-child(3)::after {
-  color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-3 .step:nth-child(4) {
-  background-color: #fcbb09;
-}
-.forms-container #register-form > .progress.page-3 .step:nth-child(4)::after {
-  color: #fcbb09;
-}
-.forms-container #register-form > .progress.done::after {
+.forms-container #register-form > #progress.done::after {
   width: 100%;
 }
 .forms-container #register-form .error-container {
@@ -1834,7 +1791,9 @@ footer a:hover, footer p:hover {
   color: white;
   cursor: default;
 }
-.forms-container .page .input-container input, .forms-container .page .input-container select, .forms-container .page .input-container textarea {
+.forms-container .page .input-container input,
+.forms-container .page .input-container select,
+.forms-container .page .input-container textarea {
   color: white !important;
   border: solid rgba(255, 255, 255, 0.4) 1px !important;
   background-color: transparent !important;
@@ -1845,7 +1804,9 @@ footer a:hover, footer p:hover {
   height: 30px;
   box-sizing: border-box;
 }
-.forms-container .page .input-container input ~ label, .forms-container .page .input-container select ~ label, .forms-container .page .input-container textarea ~ label {
+.forms-container .page .input-container input ~ label,
+.forms-container .page .input-container select ~ label,
+.forms-container .page .input-container textarea ~ label {
   transition: transform 100ms ease-in-out, color 100ms linear;
   padding: 4px;
   display: flex;
@@ -1853,10 +1814,14 @@ footer a:hover, footer p:hover {
   white-space: break-spaces;
   cursor: text;
 }
-.forms-container .page .input-container input:invalid, .forms-container .page .input-container select:invalid, .forms-container .page .input-container textarea:invalid {
+.forms-container .page .input-container input:invalid,
+.forms-container .page .input-container select:invalid,
+.forms-container .page .input-container textarea:invalid {
   outline: 2px solid #e74c3c;
 }
-.forms-container .page .input-container input:invalid ~ label::before, .forms-container .page .input-container select:invalid ~ label::before, .forms-container .page .input-container textarea:invalid ~ label::before {
+.forms-container .page .input-container input:invalid ~ label::before,
+.forms-container .page .input-container select:invalid ~ label::before,
+.forms-container .page .input-container textarea:invalid ~ label::before {
   content: "Invalid";
   position: absolute;
   color: #e74c3c;
@@ -1867,15 +1832,21 @@ footer a:hover, footer p:hover {
   color: white;
   cursor: default;
 }
-.forms-container .page .input-container input:not(:placeholder-shown) ~ label, .forms-container .page .input-container select:not(:placeholder-shown) ~ label, .forms-container .page .input-container textarea:not(:placeholder-shown) ~ label {
+.forms-container .page .input-container input:not(:placeholder-shown) ~ label,
+.forms-container .page .input-container select:not(:placeholder-shown) ~ label,
+.forms-container .page .input-container textarea:not(:placeholder-shown) ~ label {
   transform: scale(0.8) translate(0, calc(-100% - 4px));
   color: white;
   cursor: default;
 }
-.forms-container .page .input-container input option, .forms-container .page .input-container select option, .forms-container .page .input-container textarea option {
+.forms-container .page .input-container input option,
+.forms-container .page .input-container select option,
+.forms-container .page .input-container textarea option {
   color: black;
 }
-.forms-container .page .input-container input option:hover, .forms-container .page .input-container select option:hover, .forms-container .page .input-container textarea option:hover {
+.forms-container .page .input-container input option:hover,
+.forms-container .page .input-container select option:hover,
+.forms-container .page .input-container textarea option:hover {
   background-color: #fcbb09;
 }
 .forms-container .page .input-container select {
