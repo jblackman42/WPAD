@@ -4,41 +4,60 @@ import {
   createBrowserRouter,
   RouterProvider
 } from 'react-router-dom';
-// import Helmet from "react-helmet"
 
-import { Home, About, Leaders, SignUp, Register, Guide } from './pages';
+import { Error, Home, About, Leaders, SignUp, Register, Guide, Dashboard, Login, Logout } from './pages';
+import { AuthPage } from './components';
 import './styles/main.css';
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <Login />,
+    errorElement: <Error />,
+  },
+  {
     path: "/",
     element: <Home />,
-    errorElement: <h1>Something went wrong</h1>,
+    errorElement: <Error />,
   },
   {
     path: "/notaboutus",
     element: <About />,
-    errorElement: <h1>Something went wrong</h1>,
+    errorElement: <Error />,
   },
   {
     path: "/leaders",
     element: <Leaders />,
-    errorElement: <h1>Something went wrong</h1>,
+    errorElement: <Error />,
   },
   {
     path: "/signup",
     element: <SignUp />,
-    errorElement: <h1>Something went wrong</h1>,
+    errorElement: <Error />,
   },
   {
     path: "/register",
     element: <Register />,
-    errorElement: <h1>Something went wrong</h1>,
+    errorElement: <Error />,
   },
   {
     path: "/guide",
     element: <Guide />,
-    errorElement: <h1>Something went wrong</h1>,
+    errorElement: <Error />,
+  },
+  {
+    path: "/logout",
+    element: <Logout />,
+    errorElement: <Error />,
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <AuthPage>
+        <Dashboard />
+      </AuthPage>
+    ),
+    errorElement: <Error />
   }
 ]);
 

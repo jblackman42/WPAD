@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { FaInfo } from "react-icons/fa6";
 
+import instance from "../lib/globals.js";
 import { Navbar, Footer, Loading } from "../components";
 
 const hours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
 const urlParams = new URLSearchParams(window.location.search);
 const date = urlParams.get('date');
 const hour = urlParams.get('hour');
-const fetchURL = 'http://localhost:5000'
 
 const SignUp = () => {
   const [allCommunityReservations, setAllCommunityReservations] = useState(null);
@@ -88,43 +87,29 @@ const SignUp = () => {
   };
 
   const getPrayerSchedules = async (startDate, endDate) =>
-    fetch(`${fetchURL}/api/wpad/getSchedules?startDate=${startDate}&endDate=${endDate}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to retrieve prayer schedules');
-      }
-      return response.json();
-    })
+    instance.get(`/api/wpad/getSchedules?startDate=${startDate}&endDate=${endDate}`)
+    .then(response => response.data)
     .catch((error) => {
+      console.error(error);
       throw new Error('Failed to retrieve prayer schedules');
     })
 
   const getCommunityReservations = async (startDate, endDate) =>
-    fetch(`${fetchURL}/api/wpad/getReservations?startDate=${startDate}&endDate=${endDate}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to retrieve prayer schedules');
-      }
-      return response.json();
-    })
+    instance.get(`/api/wpad/getReservations?startDate=${startDate}&endDate=${endDate}`)
+    .then(response => response.data)
     .catch((error) => {
       throw new Error('Failed to retrieve prayer schedules');
     });
 
   const getAllCommunities = async () =>
-    fetch(`${fetchURL}/api/wpad/getCommunities`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to retrieve prayer schedules');
-      }
-      return response.json();
-    })
+    instance.get('/api/wpad/getCommunities')
+    .then(response => response.data)
     .catch((error) => {
       throw new Error('Failed to retrieve prayer schedules');
     });
 
   const sendConfirmationEmail = async (Email, First_Name, DateString, TimeString, Dates) => {
-    return axios.post(`${fetchURL}/api/wpad/ConfirmationEmail`, {Email, First_Name, DateString, TimeString, Dates})
+    return instance.post('/api/wpad/ConfirmationEmail', {Email, First_Name, DateString, TimeString, Dates})
       .then(response => response.data)
   }
 
@@ -159,7 +144,7 @@ const SignUp = () => {
       };
     });
     
-    axios.post(`${fetchURL}/api/wpad/PrayerSchedules`, prayerSchedules)
+    instance.post('/api/wpad/PrayerSchedules', prayerSchedules)
       .then(() => {
         setIsLoading(false);
         sendConfirmationEmail(
@@ -179,14 +164,6 @@ const SignUp = () => {
         );
       })
       .catch(() => handleError())
-    // fetch(`${fetchURL}/api/wpad/PrayerSchedules`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Accept": "Application/JSON",
-    //     "Content-Type": "Application/JSON"
-    //   },
-    //   body: JSON.stringify(prayerSchedules)
-    // })
   }
 
   useEffect(() => {
@@ -211,13 +188,8 @@ const SignUp = () => {
   useEffect(() => {
     const localStartDate = selectedHour ? formatDate(new Date(new Date(date).setHours(selectedHour))) : formatDate(new Date(date));
     const getSequence = async (sequenceInterval, sequenceDayPosition, sequenceWeekdays, sequenceTotalOccurrences) =>
-      fetch(`${fetchURL}/api/wpad/GenerateSequence?Interval=${sequenceInterval}&StartDate=${localStartDate}&DayPosition=${sequenceDayPosition}&TotalOccurrences=${sequenceTotalOccurrences}&Weekdays=${sequenceWeekdays}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to retrieve prayer schedules');
-        }
-        return response.json();
-      })
+      instance.get(`/api/wpad/GenerateSequence?Interval=${sequenceInterval}&StartDate=${localStartDate}&DayPosition=${sequenceDayPosition}&TotalOccurrences=${sequenceTotalOccurrences}&Weekdays=${sequenceWeekdays}`)
+      .then(response => response.data)
       .catch((error) => {
         throw new Error('Failed to retrieve prayer schedules');
       });

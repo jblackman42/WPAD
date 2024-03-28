@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
+import instance from "../lib/globals.js";
 import TextLoop from "./TextLoop";
 
 const Calendar = () => {
@@ -78,39 +79,24 @@ const Calendar = () => {
   
   useEffect(() => {
     const getPrayerSchedules = async (startDate, endDate) =>
-      fetch(`http://localhost:5000/api/wpad/getSchedules?startDate=${startDate}&endDate=${endDate}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to retrieve prayer schedules');
-        }
-        return response.json();
-      })
+      instance.get(`/api/wpad/getSchedules?startDate=${startDate}&endDate=${endDate}`)
+      .then(response => response.data)
       .catch((error) => {
         console.log(error);
         throw new Error('Failed to retrieve prayer schedules');
       })
 
     const getCommunityReservations = async (startDate, endDate) =>
-      fetch(`http://localhost:5000/api/wpad/getReservations?startDate=${startDate}&endDate=${endDate}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to retrieve prayer schedules');
-        }
-        return response.json();
-      })
+      instance.get(`/api/wpad/getReservations?startDate=${startDate}&endDate=${endDate}`)
+      .then(response => response.data)
       .catch((error) => {
         console.log(error);
         throw new Error('Failed to retrieve prayer schedules');
       });
 
     const getAllCommunities = async () =>
-      fetch(`http://localhost:5000/api/wpad/getCommunities`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to retrieve prayer schedules');
-        }
-        return response.json();
-      })
+      instance.get('/api/wpad/getCommunities')
+      .then(response => response.data)
       .catch((error) => {
         console.log(error);
         throw new Error('Failed to retrieve prayer schedules');

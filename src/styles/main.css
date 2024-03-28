@@ -383,6 +383,12 @@ li {
   background-color: #fcbb09;
   color: #2e2d2b;
 }
+.btn.icon {
+  display: grid;
+  place-items: center;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  padding: 0.5rem 0.75rem;
+}
 .btn:hover {
   transform: translateY(-2px);
 }
@@ -2028,308 +2034,106 @@ footer a:hover, footer p:hover {
   filter: brightness(0.6);
 }
 
-#prayer-dashboard {
-  display: flex;
-  flex-direction: column;
+#community-select {
   width: clamp(50vw, 1280px, 95vw);
   margin: 2rem auto;
 }
-#prayer-dashboard .row {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-#prayer-dashboard .row .col {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  flex: 1;
-}
-#prayer-dashboard .row .chart-container {
-  width: calc(640px - 1rem);
-  max-width: 90vw;
-}
-#prayer-dashboard .row .chart-container h1 {
-  margin: 0;
+#community-select p {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
   text-align: center;
-  font-size: 1.5em;
-  font-family: Proxima-nova, "Sans-serif";
+}
+#community-select .community-option-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-#table-container {
-  display: grid;
-  place-items: center;
-  font-size: clamp(8px, 2.25vw, 16px);
-  max-width: 90vw;
-  margin: 1rem auto;
+#dashboard-container {
+  width: clamp(50vw, 1280px, 95vw);
+  margin: 2rem auto;
 }
-#table-container p {
-  font-size: inherit;
-  white-space: nowrap;
+#dashboard-container #dashboard-header {
+  background-color: #c4beb6;
+  padding: 2rem;
+  border-radius: 8px;
 }
-#table-container #table-header {
-  display: flex;
-  width: 100%;
-  font-weight: bold;
-  background-color: #2e2d2b;
-  color: white;
-  border-bottom: 2px solid #282828;
-}
-#table-container #table-header p {
-  border-left: 2px solid #282828;
-  padding: 0.5em;
-  margin: 0;
-  flex: 1 1 0px;
-}
-#table-container #table-header p:first-of-type {
-  border-left: none;
-}
-#table-container #table-header p.date, #table-container #table-header p.hours {
-  flex-grow: 2;
-}
-#table-container #roster-table {
-  position: relative;
-  width: 100%;
-  max-height: 600px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  filter: drop-shadow(rgba(0, 0, 0, 0.24) 0px 3px 8px);
-  /* width */
-  /* Track */
-  /* Handle */
-  /* Handle on hover */
-}
-#table-container #roster-table::-webkit-scrollbar {
-  width: 10px;
-  background-color: #f6f6f6;
-}
-#table-container #roster-table::-webkit-scrollbar-track {
-  border-radius: 5px;
-}
-#table-container #roster-table::-webkit-scrollbar-thumb {
-  background: #2e2d2b;
-  border-radius: 5px;
-  border: 1px solid #f6f6f6;
-}
-#table-container #roster-table::-webkit-scrollbar-thumb:hover {
-  background: #4e4d4b;
-  cursor: pointer;
-}
-#table-container #roster-table .row {
-  display: flex;
-  width: 100%;
-  position: sticky;
-}
-#table-container #roster-table .row:nth-child(odd) {
-  background-color: #f6f6f6;
-}
-#table-container #roster-table .row:nth-child(even) {
-  background-color: #ffffff;
-}
-#table-container #roster-table .row.day {
-  cursor: pointer;
-}
-#table-container #roster-table .row.day:nth-child(4n) {
-  background-color: #f6f6f6;
-}
-#table-container #roster-table .row.highlight {
-  outline: 2px solid #2ecc71;
-}
-#table-container #roster-table .row#header {
-  font-weight: bold;
-  background-color: #2e2d2b;
-  color: white;
-  border-bottom: 2px solid #282828;
-}
-#table-container #roster-table .row#header p {
-  border-left: 2px solid #282828;
-}
-#table-container #roster-table .row#header p:first-of-type {
-  border-left: none;
-}
-#table-container #roster-table .row p {
-  padding: 0.5em;
-  margin: 0;
-  flex: 1 1 0px;
-}
-#table-container #roster-table .row p.date, #table-container #roster-table .row p.hours {
-  flex-grow: 2;
-}
-#table-container #roster-table .dropdown-table {
-  margin-block: 1px;
-  width: 100%;
-  height: 0px;
-  overflow: hidden;
-  overflow-x: auto;
-}
-#table-container #roster-table .dropdown-table .dropdown-scroll-container {
-  min-width: -moz-max-content;
-  min-width: max-content;
-  width: 100%;
-  margin-left: 16px;
-}
-#table-container #roster-table .dropdown-table.open {
-  height: auto;
-}
-#table-container #roster-table .dropdown-table p {
-  text-align: left;
-}
-#table-container #roster-table .dropdown-table p.name {
-  flex-grow: 1;
-}
-#table-container #roster-table .dropdown-table p.datetime {
-  flex-grow: 2;
-}
-#table-container #roster-table .dropdown-table p.email {
-  flex-grow: 2;
-}
-#table-container #roster-table .dropdown-table p.phone {
-  flex-grow: 1;
-}
-#table-container #csv-download {
-  margin: 1rem 0;
-  margin-left: auto;
-}
-#table-container #table-footer {
+#dashboard-container #dashboard-header .header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 0.5rem;
-  width: 100%;
 }
-#table-container #table-footer #csv-download {
-  font-size: 1em;
+#dashboard-container #dashboard-header h2 {
   margin: 0;
-}
-#table-container #table-footer p {
-  margin: 0;
-  font-weight: bold;
+  font-size: 2rem;
 }
 
-#prayer-point-form {
-  width: 100%;
-  max-width: 90vw;
-  margin: 0 auto;
-  font-family: Proxima-nova, sans-serif;
-}
-#prayer-point-form .input-container {
-  display: flex;
-  flex-direction: column;
-}
-#prayer-point-form .input-container textarea {
-  resize: none;
-  border: none;
-  background-color: white;
-  font-size: 18px;
-  border-radius: 2px;
-  outline: none;
-  padding: 4px 2px;
-  height: 60px;
-  box-sizing: border-box;
-}
-#prayer-point-form .button-container {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-#prayer-point-form .button-container button {
-  font-size: 1em;
-  margin: 0;
-  padding: 0.5rem 1.5rem;
-}
-#prayer-point-form .button-container button:disabled {
-  display: none;
-  visibility: hidden;
-}
-
-#reservation-table-container {
+.chart-card {
+  width: 400px;
+  height: 100%;
   display: grid;
   place-items: center;
-  width: 100%;
-  max-width: 90vw;
-  margin: 0 auto;
-  font-family: Proxima-nova, sans-serif;
+  outline: 2px solid rgba(0, 0, 0, 0.6666666667);
+  outline-offset: -2px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
 }
-#reservation-table-container #reservation-table {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  filter: drop-shadow(rgba(0, 0, 0, 0.24) 0px 3px 8px);
+.chart-card h2,
+.chart-card h3,
+.chart-card h4,
+.chart-card h5,
+.chart-card h6,
+.chart-card p {
+  font-family: Proxima-nova;
 }
-#reservation-table-container #reservation-table .data-row {
-  display: flex;
-}
-#reservation-table-container #reservation-table .data-row:not(.header) {
-  margin-bottom: 4px;
-}
-#reservation-table-container #reservation-table .data-row:last-of-type {
-  margin-bottom: 0;
-}
-#reservation-table-container #reservation-table .data-row:nth-child(odd) {
-  background-color: #f6f6f6;
-}
-#reservation-table-container #reservation-table .data-row:nth-child(even) {
-  background-color: #ffffff;
-}
-#reservation-table-container #reservation-table .data-row.header {
-  font-weight: bold;
-  background-color: #2e2d2b;
-  color: white;
-}
-#reservation-table-container #reservation-table .data-row.header p {
-  border-bottom: 2px solid #282828;
-  border-right: 2px solid #282828;
-}
-#reservation-table-container #reservation-table .data-row.header p:last-of-type {
-  border-right: none;
-}
-#reservation-table-container #reservation-table .data-row .date-label, #reservation-table-container #reservation-table .data-row p {
-  padding: 0.5em;
+.chart-card h1 {
+  line-height: 0.65;
   margin: 0;
-  margin-right: auto;
+  margin-top: auto;
 }
-#reservation-table-container #reservation-table .data-row .btn {
-  border: none;
-  background-color: transparent;
+.chart-card h3 {
+  margin: 0.25rem;
+}
+.chart-card p {
   margin: 0;
-  padding: 0 0.5rem;
+  font-size: 1.15rem;
 }
-#reservation-table-container #reservation-table .data-row .btn.reservation-edit-btn {
-  color: #27ae60;
-}
-#reservation-table-container #reservation-table .data-row .btn.reservation-save-btn {
-  color: #27ae60;
-  display: none;
-  visibility: hidden;
-}
-#reservation-table-container #reservation-table .data-row .btn.reservation-cancel-btn {
-  color: #e74c3c;
-  display: none;
-  visibility: hidden;
-}
-#reservation-table-container #reservation-table .data-row .btn.reservation-delete-btn {
-  color: #34495e;
-  display: none;
-  visibility: hidden;
-}
-#reservation-table-container #new-prayer-day-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-#reservation-table-container #new-prayer-day-container p {
-  margin: 0;
-  text-align: left;
-}
-#reservation-table-container #new-prayer-day-container .input-container {
+.chart-card .kpi-card {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
+  width: 100%;
+  height: 100%;
 }
-#reservation-table-container #new-prayer-day-container .input-container button {
-  font-size: 1em;
+.chart-card .kpi-card .kpi-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: calc(200px - 2rem);
+}
+.chart-card .kpi-card .kpi-chart {
+  max-height: 120px;
+  margin-top: auto;
+}
+
+.error-container {
+  width: -moz-max-content;
+  width: max-content;
+  max-width: 95vw;
+  margin: 8vh auto;
+}
+.error-container h1 {
+  font-size: clamp(2rem, 6vw, 4rem);
   margin: 0;
-  padding: 0.5rem 1.5rem;
+}
+.error-container p {
+  margin: 0.5rem;
+  font-size: clamp(1rem, 3.5vw, 2rem);
+}
+.error-container a {
+  margin: 1rem auto;
+}
+@media screen and (max-width: 550px) {
+  .error-container {
+    text-align: center;
+  }
 }/*# sourceMappingURL=main.css.map */

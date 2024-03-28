@@ -1,0 +1,23 @@
+.error-container {
+  width: max-content;
+  max-width: 95vw;
+  margin: 8vh auto;
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    margin: 0;
+  }
+
+  p {
+    margin: .5rem;
+    font-size: clamp(1rem, 3.5vw, 2rem);
+  }
+
+  a {
+    margin: 1rem auto;
+  }
+
+  @media screen and (max-width:550px) {
+    text-align: center;
+  }
+}

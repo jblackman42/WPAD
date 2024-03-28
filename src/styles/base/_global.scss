@@ -73,6 +73,13 @@ li {
 		color: $primary-black;
 	}
 
+	&.icon {
+		display: grid;
+		place-items: center;
+		font-size: clamp(1.25rem, 2vw, 1.5rem);
+		padding: .5rem .75rem;
+	}
+
 	width: max-content;
 	padding: .75rem 1.25rem;
 	border-radius: .25rem;
