@@ -1,7 +1,7 @@
-import React, {useState, useEffect, forwardRef, useRef} from "react";
+import React, {useState, useEffect, forwardRef, useRef, useMemo} from "react";
 
 import { BsBoxArrowLeft } from "react-icons/bs";
-import Chart, { defaults } from "chart.js/auto";
+import { defaults } from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
 import Loading from "./Loading";
@@ -13,8 +13,9 @@ defaults.responsive = true;
 defaults.plugins.legend.display = false;
 defaults.plugins.title.display = false;
 
+
 const calculatePercentChange = (arr) => {
-  if (arr.length < 2) {
+  if (!arr || arr.length < 2) {
       // Not enough data to calculate percent change
       return 0;
   }
@@ -34,7 +35,8 @@ const calculatePercentChange = (arr) => {
   }
 }
 
-const KPIChart = forwardRef(({title, unit, values}, ref) => {
+
+const KPIChart = forwardRef(({title, unit, values, total}, ref) => {
   const percentChange = calculatePercentChange(values);
   let borderColor = percentChange > 0 ? '#27ae60' : percentChange < 0 ? '#c0392b' : '#2c3e50';
   const minValue = Math.min(...values) - 0.2;
@@ -48,12 +50,12 @@ const KPIChart = forwardRef(({title, unit, values}, ref) => {
     if (!h1 || !card) return;
 
     // console.log(h1.scrollWidth - h1.offsetWidth);
-    let fontSize = 70; // Starting font size in pixels
-    let maxWidth = 150;
+    let fontSize = 10; // Starting font size in pixels
+    const initialWidth = h1.scrollWidth;
     h1.style.fontSize = fontSize + 'px';
 
-    while (h1.scrollWidth > maxWidth) {
-      fontSize--;
+    while (h1.scrollWidth <= initialWidth && fontSize < 50) {
+      fontSize++;
       h1.style.fontSize = fontSize + 'px';
     }
   };
@@ -64,13 +66,13 @@ const KPIChart = forwardRef(({title, unit, values}, ref) => {
 
   return (
     <div ref={chartCardRef} className="chart-card">
-      <h3>{ title }</h3>
+      <h3>{ title } {total ? `(Last 30 Days)` : ''}</h3>
       <div className="kpi-card">
         <div className="kpi-data">
-          <h1 ref={h1Ref}>{ values.at(-1) } </h1>
+          <h1 ref={h1Ref}>{ total ? values.reduce((accum,val) => accum+val, 0) : values.at(-1) } </h1>
           {/* <h1>{ values.at(-1) }</h1> */}
           <p style={{marginBottom:"auto"}}>{unit}</p>
-          <p style={{color: borderColor}}> { percentChange > 0 ? '+' : '' }{ percentChange }% - { values.length }</p>
+          {!total && <p style={{color: borderColor}}> { percentChange > 0 ? '+' : '' }{ percentChange }%</p>}
           {/* <p style={{color: borderColor}}> { percentChange > 0 ? '+' : '' }{ percentChange }% Last { values.length } Days</p> */}
         </div>
         <div className="kpi-chart">
@@ -91,7 +93,7 @@ const KPIChart = forwardRef(({title, unit, values}, ref) => {
               
                     const gradient = ctx.createLinearGradient(0, 0, 0, chartInstance.height);
                     gradient.addColorStop(0.25, borderColor + '88'); // Use the borderColor as the start color
-                    gradient.addColorStop(0.9, "#c4beb6"); // End color
+                    gradient.addColorStop(0.9, "#FFF"); // End color
                     
                     return gradient;
                   }
@@ -123,15 +125,163 @@ const KPIChart = forwardRef(({title, unit, values}, ref) => {
   )
 });
 
+const getCSV = (rows) => {
+  let csvContent = "data:text/csv;charset=utf-8," 
+      + rows.map(e => e.join(",")).join("\n");
+
+  // For compatibility with various browsers
+  var encodedUri = encodeURI(csvContent);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "schedule.csv");
+  document.body.appendChild(link); // Required for FF
+
+  link.click(); // Trigger download
+  document.body.removeChild(link); // Clean up
+}
+
+const ScheduleTable = ({ schedules }) => {
+  const [selectedDropdown, setSelectedDropdown] = useState(null);
+  const [timeFilter, setTimeFilter] = useState('YTD'); // State for tracking the current filter
+
+  const filteredSchedules = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now.setHours(0, 0, 0, 0)); // Reset hours to start of today
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+
+    switch (timeFilter) {
+      case 'This Month':
+        return schedules.filter(schedule => {
+          const scheduleDate = new Date(schedule.Start_Date);
+          return scheduleDate >= startOfMonth && scheduleDate <= today;
+        });
+      case 'YTD':
+        return schedules.filter(schedule => {
+          const scheduleDate = new Date(schedule.Start_Date);
+          return scheduleDate >= startOfYear && scheduleDate <= today;
+        });
+      case 'Future':
+        return schedules.filter(schedule => new Date(schedule.Start_Date) > today);
+      case 'All Time':
+      default:
+        return schedules;
+    }
+  }, [schedules, timeFilter]);
+
+  const { uniqueDaysArray, schedulesByDate, daysHours } = useMemo(() => {
+    const uniqueDays = {};
+    const schedulesByDate = {};
+    const daysHours = {};
+
+    filteredSchedules.forEach(schedule => {
+      const dateString = new Date(schedule.Start_Date).toLocaleDateString();
+      uniqueDays[dateString] = (uniqueDays[dateString] || 0) + 1;
+
+      if (!schedulesByDate[dateString]) {
+        schedulesByDate[dateString] = [];
+      }
+      schedulesByDate[dateString].push(schedule);
+
+      const hour = new Date(schedule.Start_Date).getHours();
+      if (!daysHours[dateString]) {
+        daysHours[dateString] = new Set();
+      }
+      daysHours[dateString].add(hour);
+    });
+
+    const uniqueDaysArray = Object.entries(uniqueDays).sort((a, b) => new Date(a[0]) - new Date(b[0]));
+
+    Object.keys(daysHours).forEach(day => daysHours[day] = daysHours[day].size);
+
+    return { uniqueDaysArray, schedulesByDate, daysHours };
+  }, [filteredSchedules]);
+
+  return (
+    <div id="table-container">
+      <div id="table-header">
+        <p className="date">Date</p>
+        <p>Signups</p>
+        <p className="hours">Hours Covered</p>
+      </div>
+      <div id="roster-table">
+        {
+          uniqueDaysArray.map((day, i) => {
+            const dayKey = day[0]; // Date string
+            const currDayRoster = schedulesByDate[dayKey].sort((a, b) => new Date(a.Start_Date) - new Date(b.Start_Date));
+
+            return (
+              <div key={i}>
+                <div id={`table-${i}`} className="row day" onClick={() => setSelectedDropdown(selectedDropdown === i ? null : i)}>
+                  <p className="date" style={{ textAlign: "left" }}>
+                    {new Date(dayKey).toLocaleDateString('en-us', { weekday: "short" })} {dayKey}
+                  </p>
+                  <p id="signups">{day[1]}</p>
+                  <p className="hours">{daysHours[dayKey]} / 24</p>
+                </div>
+                {selectedDropdown === i && (
+                  <div id={`dropdown-table-${i}`} className='dropdown-table open'>
+                    <div className="dropdown-scroll-container">
+                      <div className="row" id="header">
+                        <p className="name">Name</p>
+                        <p className="datetime">Time</p>
+                        <p className="email">Email</p>
+                        <p className="phone">Phone</p>
+                      </div>
+                      {currDayRoster.map((schedule, j) => {
+                        const { First_Name, Last_Name, Email, Phone, Start_Date, End_Date } = schedule;
+                        const startDate = new Date(Start_Date).toLocaleTimeString('en-us', { minute: "2-digit", hour: "2-digit" });
+                        const endDate = new Date(End_Date).toLocaleTimeString('en-us', { minute: "2-digit", hour: "2-digit" });
+                        return (
+                          <div className="row" key={j}>
+                            <p className="name">{First_Name} {Last_Name || ''}</p>
+                            <p className="datetime">{startDate} - {endDate}</p>
+                            <p className="email">{Email}</p>
+                            <p className="phone">{Phone}</p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        }
+      </div>
+      <div id="table-footer">
+        <select value={timeFilter} onChange={e => setTimeFilter(e.target.value)}>
+          <option value="All Time">All Time</option>
+          <option value="YTD">YTD</option>
+          <option value="This Month">This Month</option>
+          <option value="Future">Future</option>
+        </select>
+        {/* <button id="csv-download" className="btn" onClick={()=>getCSV(filteredSchedules.map(schedule => [`${schedule.First_Name} ${schedule.Last_Name || ''}`, new Date(schedule.Start_Date).toLocaleDateString(), `${new Date(schedule.Start_Date).toLocaleTimeString('en-us', {"minute": "2-digit", "hour": "2-digit"})} - ${new Date(schedule.End_Date).toLocaleTimeString('en-us', {"minute": "2-digit", "hour": "2-digit"})}`, schedule.Email, schedule.Phone]))}>Download CSV</button> */}
+        <button id="csv-download" className="btn" onClick={() => {
+          const sortedSchedules = filteredSchedules.sort((a, b) => new Date(a.Start_Date) - new Date(b.Start_Date));
+          const csvRows = sortedSchedules.map(schedule => [
+            `${schedule.First_Name} ${schedule.Last_Name || ''}`,
+            new Date(schedule.Start_Date).toLocaleDateString(),
+            `${new Date(schedule.Start_Date).toLocaleTimeString('en-us', {"hour12": false, "hour": "2-digit", "minute": "2-digit"})} - ${new Date(schedule.End_Date).toLocaleTimeString('en-us', {"hour12": false, "hour": "2-digit", "minute": "2-digit"})}`,
+            schedule.Email,
+            schedule.Phone
+          ]);
+          getCSV(csvRows);
+        }}>Download CSV</button>
+      </div>
+    </div>
+  );
+};
+
 const Dashboard = ({community, showSwitchCommunity, switchCommunity}) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [allCommunityPrayers, setAllCommunityPrayers] = useState([]);
   const [hoursCovered, setHoursCovered] = useState([]);
-  const [totalHoursCovered, setTotalHoursCovered] = useState(null);
-  const [uniqueUsers, setUniqueUsers] = useState(null);
-  const [CountOfUniqueUserSignupsWithinPeriod, setCountOfUniqueUserSignupsWithinPeriod] = useState(null);
+  const [uniqueUsers, setUniqueUsers] = useState([]);
+  const [uniqueUserSignupsWithinPeriod, setUniqueUserSignupsWithinPeriod] = useState([]);
   const [period, setPeriod] = useState(30);
+  // const period = 30;
 
   const [usersByEarliestSignup, setUsersByEarliestSignup] = useState({});
 
@@ -172,22 +322,24 @@ const Dashboard = ({community, showSwitchCommunity, switchCommunity}) => {
     // setUniqueUsers([...new Set(allCommunityPrayers.map(prayer => prayer.Email))].length);
 
     // console.log(allCommunityPrayers)
-    // allCommunityPrayers.forEach(prayer => {
-    //   const { Email, _Signup_Date } = prayer;
-    //   let tempUsersByEarliestSignup = usersByEarliestSignup;
+    allCommunityPrayers.forEach(prayer => {
+      const { Email, _Signup_Date } = prayer;
+      let tempUsersByEarliestSignup = usersByEarliestSignup;
       
-    //   if (usersByEarliestSignup[Email]) {
-    //     // compare signup dates
-    //     if (usersByEarliestSignup[Email] > new Date(_Signup_Date)) {
-    //       tempUsersByEarliestSignup[Email] = new Date(_Signup_Date);
-    //     }
-    //   } else {
-    //     tempUsersByEarliestSignup[Email] = new Date(_Signup_Date);
-    //   }
+      if (usersByEarliestSignup[Email]) {
+        // compare signup dates
+        if (usersByEarliestSignup[Email] > new Date(_Signup_Date)) {
+          tempUsersByEarliestSignup[Email] = new Date(_Signup_Date);
+        }
+      } else {
+        tempUsersByEarliestSignup[Email] = new Date(_Signup_Date);
+      }
 
-    //   setUsersByEarliestSignup(tempUsersByEarliestSignup);
-    // });
+      setUsersByEarliestSignup(tempUsersByEarliestSignup);
+    });
 
+    setUniqueUsers(periodList.map(date => Object.values(usersByEarliestSignup).filter(startDate => startDate.toISOString().split('T')[0] <= date).length));
+    setUniqueUserSignupsWithinPeriod(periodList.map(date => Object.values(usersByEarliestSignup).filter(startDate => startDate.toISOString().split('T')[0] === date).length));
     // setCountOfUniqueUserSignupsWithinPeriod(Object.values(usersByEarliestSignup).filter(date => date >= new Date(new Date() - (1000*60*60*24*period))).length);
 
   }, [allCommunityPrayers, usersByEarliestSignup, period])
@@ -199,13 +351,18 @@ const Dashboard = ({community, showSwitchCommunity, switchCommunity}) => {
           <h2 style={{margin: !showSwitchCommunity ? "0 auto" : "0"}}>{community.Community_Name}</h2>
           {showSwitchCommunity && <button className="btn icon" onClick={switchCommunity} title="Edit Selected Church/Community"><BsBoxArrowLeft /></button>}
         </div>
-        <div className="header-row" style={{marginTop:"1rem"}}>
-          {/* <h1>{totalHoursCovered} Hour{totalHoursCovered !== 1 ? 's' : ''} Covered</h1> */}
-          {/* <h1>{uniqueUsers} Unique User{uniqueUsers !== 1 ? 's' : ''}</h1> */}
-          {/* <h1>{CountOfUniqueUserSignupsWithinPeriod} New Unique User{CountOfUniqueUserSignupsWithinPeriod !== 1 ? 's' : ''} In {period} Days</h1> */}
-          <KPIChart ref={useRef(null)} values={hoursCovered} title={"Total Hours Prayed"} unit={"Hours"} />
+        <div className="scroll-container">
+          <div className="chart-row">
+            {/* <h1>{totalHoursCovered} Hour{totalHoursCovered !== 1 ? 's' : ''} Covered</h1> */}
+            {/* <h1>{uniqueUsers} Unique User{uniqueUsers !== 1 ? 's' : ''}</h1> */}
+            {/* <h1>{CountOfUniqueUserSignupsWithinPeriod} New Unique User{CountOfUniqueUserSignupsWithinPeriod !== 1 ? 's' : ''} In {period} Days</h1> */}
+            <KPIChart ref={useRef(null)} values={hoursCovered} title={"Total Hours Prayed"} unit={"Hours"} />
+            <KPIChart ref={useRef(null)} values={uniqueUsers} title={"Total Unique Users"} unit={"Users"} />
+            <KPIChart ref={useRef(null)} values={uniqueUserSignupsWithinPeriod} total={true} title={"First Time Sign-Ups"} unit={"New Users"} />
+          </div>
         </div>
       </div>
+      <ScheduleTable schedules={allCommunityPrayers}/>
     </div>
   )
 }

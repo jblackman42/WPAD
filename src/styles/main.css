@@ -393,6 +393,31 @@ li {
   transform: translateY(-2px);
 }
 
+.scroll-container {
+  overflow: auto;
+  /* width */
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+.scroll-container::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: #f6f6f6;
+}
+.scroll-container::-webkit-scrollbar-track {
+  border-radius: 5px;
+}
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #2e2d2b;
+  border-radius: 5px;
+  border: 1px solid #f6f6f6;
+}
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #4e4d4b;
+  cursor: pointer;
+}
+
 nav {
   display: flex;
   justify-content: space-between;
@@ -2052,31 +2077,37 @@ footer a:hover, footer p:hover {
 #dashboard-container {
   width: clamp(50vw, 1280px, 95vw);
   margin: 2rem auto;
+  filter: drop-shadow(rgba(0, 0, 0, 0.24) 0px 3px 8px);
 }
 #dashboard-container #dashboard-header {
-  background-color: #c4beb6;
-  padding: 2rem;
-  border-radius: 8px;
+  background-color: #FFF;
 }
 #dashboard-container #dashboard-header .header-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0 1rem;
+  padding-top: 1rem;
+}
+#dashboard-container #dashboard-header .chart-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1rem;
+  min-width: 1000px;
 }
 #dashboard-container #dashboard-header h2 {
   margin: 0;
-  font-size: 2rem;
+  font-size: clamp(1rem, 8vw, 2rem);
 }
 
 .chart-card {
-  width: 400px;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  outline: 2px solid rgba(0, 0, 0, 0.6666666667);
-  outline-offset: -2px;
-  padding: 0.5rem 1rem;
+  border: 2px solid rgba(0, 0, 0, 0.6666666667);
+  box-sizing: border-box;
   border-radius: 8px;
+  padding: 0 0.5rem;
+  box-shadow: 3px 2px 8px rgba(0, 0, 0, 0.2);
 }
 .chart-card h2,
 .chart-card h3,
@@ -2086,33 +2117,190 @@ footer a:hover, footer p:hover {
 .chart-card p {
   font-family: Proxima-nova;
 }
-.chart-card h1 {
-  line-height: 0.65;
-  margin: 0;
-  margin-top: auto;
-}
 .chart-card h3 {
-  margin: 0.25rem;
-}
-.chart-card p {
-  margin: 0;
-  font-size: 1.15rem;
+  text-align: center;
+  margin: 0.5rem;
 }
 .chart-card .kpi-card {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
 }
 .chart-card .kpi-card .kpi-data {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: calc(200px - 2rem);
 }
-.chart-card .kpi-card .kpi-chart {
-  max-height: 120px;
+.chart-card .kpi-card .kpi-data h1 {
+  line-height: 0.8;
+  margin: 0;
   margin-top: auto;
+}
+.chart-card .kpi-card .kpi-data p {
+  margin: 0;
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+.chart-card .kpi-card .kpi-chart canvas {
+  max-width: 100%;
+}
+
+@media screen and (max-width: 525px) {
+  #dashboard-container #dashboard-header .chart-row {
+    min-width: 0;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+#table-container {
+  display: grid;
+  place-items: center;
+  font-size: clamp(14px, 2.25vw, 16px);
+  margin: 1rem auto;
+}
+#table-container p {
+  font-size: inherit;
+  white-space: nowrap;
+}
+#table-container #table-header {
+  display: flex;
+  width: 100%;
+  font-weight: bold;
+  background-color: #2e2d2b;
+  color: white;
+  border-bottom: 2px solid #282828;
+}
+#table-container #table-header p {
+  border-left: 2px solid #282828;
+  padding: 0.5em;
+  margin: 0;
+  flex: 1 1 0px;
+}
+#table-container #table-header p:first-of-type {
+  border-left: none;
+}
+#table-container #table-header p.date, #table-container #table-header p.hours {
+  flex-grow: 2;
+}
+#table-container #roster-table {
+  position: relative;
+  width: 100%;
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  filter: drop-shadow(rgba(0, 0, 0, 0.24) 0px 3px 8px);
+  /* width */
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+#table-container #roster-table::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: #f6f6f6;
+}
+#table-container #roster-table::-webkit-scrollbar-track {
+  border-radius: 5px;
+}
+#table-container #roster-table::-webkit-scrollbar-thumb {
+  background: #2e2d2b;
+  border-radius: 5px;
+  border: 1px solid #f6f6f6;
+}
+#table-container #roster-table::-webkit-scrollbar-thumb:hover {
+  background: #4e4d4b;
+  cursor: pointer;
+}
+#table-container #roster-table .row {
+  display: flex;
+  width: 100%;
+  position: sticky;
+}
+#table-container #roster-table .row:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#table-container #roster-table .row:nth-child(even) {
+  background-color: #ffffff;
+}
+#table-container #roster-table .row.day {
+  cursor: pointer;
+  margin-block: 1px;
+}
+#table-container #roster-table .row.day:nth-child(4n) {
+  background-color: #f6f6f6;
+}
+#table-container #roster-table .row.highlight {
+  outline: 2px solid #2ecc71;
+}
+#table-container #roster-table .row#header {
+  font-weight: bold;
+  background-color: #2e2d2b;
+  color: white;
+  border-bottom: 2px solid #282828;
+}
+#table-container #roster-table .row#header p {
+  border-left: 2px solid #282828;
+}
+#table-container #roster-table .row#header p:first-of-type {
+  border-left: none;
+}
+#table-container #roster-table .row p {
+  padding: 0.5em;
+  margin: 0;
+  flex: 1 1 0px;
+}
+#table-container #roster-table .row p.date, #table-container #roster-table .row p.hours {
+  flex-grow: 2;
+}
+#table-container #roster-table .dropdown-table {
+  margin-block: 1px;
+  width: 100%;
+  height: 0px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+#table-container #roster-table .dropdown-table .dropdown-scroll-container {
+  min-width: -moz-max-content;
+  min-width: max-content;
+  width: 100%;
+  margin-left: 16px;
+}
+#table-container #roster-table .dropdown-table.open {
+  height: auto;
+}
+#table-container #roster-table .dropdown-table p {
+  text-align: left;
+}
+#table-container #roster-table .dropdown-table p.name {
+  flex-grow: 1;
+}
+#table-container #roster-table .dropdown-table p.datetime {
+  flex-grow: 2;
+}
+#table-container #roster-table .dropdown-table p.email {
+  flex-grow: 2;
+}
+#table-container #roster-table .dropdown-table p.phone {
+  flex-grow: 1;
+}
+#table-container #csv-download {
+  margin: 1rem 0;
+  margin-left: auto;
+}
+#table-container #table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  width: 100%;
+  font-family: Proxima-nova;
+}
+#table-container #table-footer #csv-download {
+  font-size: 1em;
+  margin: 0;
+}
+#table-container #table-footer p {
+  margin: 0;
+  font-weight: bold;
 }
 
 .error-container {

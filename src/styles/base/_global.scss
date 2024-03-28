@@ -92,3 +92,32 @@ li {
 		transform: translateY(-2px);
 	}
 }
+
+.scroll-container {
+	overflow: auto;
+
+	/* width */
+	&::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+		background-color: #f6f6f6;
+	}
+
+	/* Track */
+	&::-webkit-scrollbar-track {
+		border-radius: 5px;
+	}
+
+	/* Handle */
+	&::-webkit-scrollbar-thumb {
+		background: #2e2d2b;
+		border-radius: 5px;
+		border: 1px solid #f6f6f6;
+	}
+
+	/* Handle on hover */
+	&::-webkit-scrollbar-thumb:hover {
+		background: #4e4d4b;
+		cursor: pointer;
+	}
+}

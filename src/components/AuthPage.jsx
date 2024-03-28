@@ -20,6 +20,7 @@ const AuthPage = ({children}) => {
   useEffect(() => {
     getUser()
       .then(user => {
+        // console.log(user);
         // go to login screen if no user is found
         if (Object.keys(user).length === 0) window.location.replace("/login");
         else setIsAuthenticated(true);

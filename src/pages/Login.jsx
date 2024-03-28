@@ -27,6 +27,7 @@ const Login = () => {
       data: JSON.stringify(body)
     })
       .then(response => {
+        // console.log(response);
         setIsLoading(true);
         window.location = "/dashboard";
       })
