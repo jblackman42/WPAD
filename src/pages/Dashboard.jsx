@@ -9,7 +9,7 @@ const Dashboard = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [allCommunities, setAllCommunities] = useState([]);
   const [selectedCommunity, setSelectedCommunity] = useState(null);
-  
+
   useEffect(() => {
     instance.get('/api/wpad/myCommunity')
       .then(response => response.data)
@@ -27,20 +27,20 @@ const Dashboard = () => {
 
   return <>
     <Navbar />
+    {!errorMessage && isLoading && <Loading />}
+    {errorMessage && <p style={{ textAlign: "center", color: "#e74c3c", fontSize: "1.5rem" }}>{errorMessage}</p>}
 
     {
-      errorMessage
-        ? <p style={{textAlign:"center",color:"#e74c3c",fontSize:"1.5rem"}}>{errorMessage}</p>
-        : isLoading
-          ? <Loading />
-          : selectedCommunity
-            ? <Dash showSwitchCommunity={allCommunities.length>1} switchCommunity={()=>setSelectedCommunity(null)} community={selectedCommunity} />
-            : <div id="community-select">
-                <p>Multiple communities found, please select one to view it's dashboard:</p>
-                <div className="community-option-container">
-                  {allCommunities.map((community,i) => <button className="btn highlight" key={i} onClick={()=>setSelectedCommunity(community)}>{community.Community_Name}</button>)}
-                </div>
-              </div>
+      selectedCommunity
+        ? <Dash showSwitchCommunity={allCommunities.length > 1} switchCommunity={() => setSelectedCommunity(null)} community={selectedCommunity} setIsLoading={setIsLoading} />
+        : (
+          <div id="community-select-container">
+            <p>Multiple communities found, please select one to view it's dashboard:</p>
+            <div className="community-option-container">
+              {allCommunities.map((community, i) => <button className="btn highlight" key={i} onClick={() => setSelectedCommunity(community)}>{community.Community_Name}</button>)}
+            </div>
+          </div>
+        )
     }
 
     <Footer />

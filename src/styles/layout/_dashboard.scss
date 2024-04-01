@@ -1,6 +1,6 @@
 $defaultChartWidth: 26vw;
 
-#community-select {
+#community-select-container {
     width: $container-width-2;
     margin: 2rem auto;
 
@@ -50,6 +50,12 @@ $defaultChartWidth: 26vw;
             margin: 0;
             font-size: clamp(1rem, 8vw, 2rem);
         }
+    }
+
+    .dashboard-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .5rem;
     }
 }
 
@@ -104,19 +110,6 @@ $defaultChartWidth: 26vw;
             canvas {
                 max-width: 100%;
             }
-        }
-    }
-}
-
-@media screen and (max-width: 525px) {
-    #dashboard-container #dashboard-header {
-        // padding: 1rem;
-
-        .chart-row {
-            min-width: 0;
-            grid-template-columns: 1fr;
-            grid-template-rows: repeat(3, 1fr);
-            // margin-bottom: 6px;
         }
     }
 }
@@ -313,4 +306,179 @@ $defaultChartWidth: 26vw;
         }
     }
 
+}
+
+#prayer-point-form {
+    // flex: 1;
+    width: 100%;
+    margin: 0 auto;
+    font-family: Proxima-nova, sans-serif;
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: .5rem;
+    }
+
+    .input-container {
+        display: flex;
+        flex-direction: column;
+
+        textarea {
+            resize: none;
+            border: none;
+            background-color: white;
+            font-size: $form-font-size;
+            border-radius: 2px;
+            outline: none;
+            padding: 4px 2px;
+
+            height: 160px;
+            box-sizing: border-box;
+        }
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: .5rem;
+
+        button {
+            font-size: 1em;
+            margin: 0;
+            padding: .5rem 1.5rem;
+
+            &:disabled {
+                display: none;
+                visibility: hidden;
+            }
+        }
+    }
+}
+
+#reservation-table-container {
+    display: grid;
+    place-items: center;
+    // flex: 1;
+    width: 100%;
+
+    margin: 0 auto;
+    font-family: Proxima-nova, sans-serif;
+
+    #reservation-table {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        filter: drop-shadow(rgba(0, 0, 0, 0.24) 0px 3px 8px);
+
+        .data-row {
+            display: flex;
+
+            // justify-content: space-between;
+            &:not(.header) {
+                margin-bottom: 4px;
+            }
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+
+            &:nth-child(odd) {
+                background-color: #f6f6f6;
+            }
+
+            &:nth-child(even) {
+                background-color: #ffffff
+            }
+
+            &.header {
+                font-weight: bold;
+                background-color: $primary-black;
+                color: white;
+
+                p {
+                    border-bottom: 2px solid $secondary-black;
+                    border-right: 2px solid $secondary-black;
+
+                    &:last-of-type {
+                        border-right: none;
+                    }
+                }
+            }
+
+            .date-label,
+            p {
+                padding: .5em;
+                margin: 0;
+                margin-right: auto;
+            }
+
+            .btn {
+                border: none;
+                background-color: transparent;
+                margin: 0;
+                padding: 0 .5rem;
+
+                &.reservation-edit-btn {
+                    color: #27ae60;
+                }
+
+                &.reservation-save-btn {
+                    color: #27ae60;
+                }
+
+                &.reservation-cancel-btn {
+                    color: #e74c3c;
+                }
+
+                &.reservation-delete-btn {
+                    color: #34495e;
+                }
+            }
+        }
+    }
+
+    #new-prayer-day-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        p {
+            margin: 0;
+            text-align: left;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: space-between;
+            padding: .5rem 0;
+
+            button {
+                font-size: 1em;
+                margin: 0;
+                padding: .5rem 1.5rem
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #dashboard-container .dashboard-row {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 525px) {
+    #dashboard-container #dashboard-header {
+        // padding: 1rem;
+
+        .chart-row {
+            min-width: 0;
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(3, 1fr);
+            // margin-bottom: 6px;
+        }
+    }
 }

@@ -2059,15 +2059,15 @@ footer a:hover, footer p:hover {
   filter: brightness(0.6);
 }
 
-#community-select {
+#community-select-container {
   width: clamp(50vw, 1280px, 95vw);
   margin: 2rem auto;
 }
-#community-select p {
+#community-select-container p {
   font-size: clamp(1.25rem, 2vw, 1.5rem);
   text-align: center;
 }
-#community-select .community-option-container {
+#community-select-container .community-option-container {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
@@ -2100,6 +2100,11 @@ footer a:hover, footer p:hover {
 #dashboard-container #dashboard-header h2 {
   margin: 0;
   font-size: clamp(1rem, 8vw, 2rem);
+}
+#dashboard-container .dashboard-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
 }
 
 .chart-card {
@@ -2144,13 +2149,6 @@ footer a:hover, footer p:hover {
   max-width: 100%;
 }
 
-@media screen and (max-width: 525px) {
-  #dashboard-container #dashboard-header .chart-row {
-    min-width: 0;
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, 1fr);
-  }
-}
 #table-container {
   display: grid;
   place-items: center;
@@ -2303,6 +2301,144 @@ footer a:hover, footer p:hover {
   font-weight: bold;
 }
 
+#prayer-point-form {
+  width: 100%;
+  margin: 0 auto;
+  font-family: Proxima-nova, sans-serif;
+}
+#prayer-point-form .header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+#prayer-point-form .input-container {
+  display: flex;
+  flex-direction: column;
+}
+#prayer-point-form .input-container textarea {
+  resize: none;
+  border: none;
+  background-color: white;
+  font-size: 18px;
+  border-radius: 2px;
+  outline: none;
+  padding: 4px 2px;
+  height: 160px;
+  box-sizing: border-box;
+}
+#prayer-point-form .button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+#prayer-point-form .button-container button {
+  font-size: 1em;
+  margin: 0;
+  padding: 0.5rem 1.5rem;
+}
+#prayer-point-form .button-container button:disabled {
+  display: none;
+  visibility: hidden;
+}
+
+#reservation-table-container {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  margin: 0 auto;
+  font-family: Proxima-nova, sans-serif;
+}
+#reservation-table-container #reservation-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  filter: drop-shadow(rgba(0, 0, 0, 0.24) 0px 3px 8px);
+}
+#reservation-table-container #reservation-table .data-row {
+  display: flex;
+}
+#reservation-table-container #reservation-table .data-row:not(.header) {
+  margin-bottom: 4px;
+}
+#reservation-table-container #reservation-table .data-row:last-of-type {
+  margin-bottom: 0;
+}
+#reservation-table-container #reservation-table .data-row:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#reservation-table-container #reservation-table .data-row:nth-child(even) {
+  background-color: #ffffff;
+}
+#reservation-table-container #reservation-table .data-row.header {
+  font-weight: bold;
+  background-color: #2e2d2b;
+  color: white;
+}
+#reservation-table-container #reservation-table .data-row.header p {
+  border-bottom: 2px solid #282828;
+  border-right: 2px solid #282828;
+}
+#reservation-table-container #reservation-table .data-row.header p:last-of-type {
+  border-right: none;
+}
+#reservation-table-container #reservation-table .data-row .date-label,
+#reservation-table-container #reservation-table .data-row p {
+  padding: 0.5em;
+  margin: 0;
+  margin-right: auto;
+}
+#reservation-table-container #reservation-table .data-row .btn {
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0 0.5rem;
+}
+#reservation-table-container #reservation-table .data-row .btn.reservation-edit-btn {
+  color: #27ae60;
+}
+#reservation-table-container #reservation-table .data-row .btn.reservation-save-btn {
+  color: #27ae60;
+}
+#reservation-table-container #reservation-table .data-row .btn.reservation-cancel-btn {
+  color: #e74c3c;
+}
+#reservation-table-container #reservation-table .data-row .btn.reservation-delete-btn {
+  color: #34495e;
+}
+#reservation-table-container #new-prayer-day-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#reservation-table-container #new-prayer-day-container p {
+  margin: 0;
+  text-align: left;
+}
+#reservation-table-container #new-prayer-day-container .input-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+#reservation-table-container #new-prayer-day-container .input-container button {
+  font-size: 1em;
+  margin: 0;
+  padding: 0.5rem 1.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  #dashboard-container .dashboard-row {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 525px) {
+  #dashboard-container #dashboard-header .chart-row {
+    min-width: 0;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
 .error-container {
   width: -moz-max-content;
   width: max-content;

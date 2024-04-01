@@ -1,10 +1,11 @@
-import React, {useState, useEffect, forwardRef, useRef, useMemo} from "react";
+import React, { useState, useEffect, forwardRef, useRef, useMemo } from "react";
 
 import { BsBoxArrowLeft } from "react-icons/bs";
+import { FaEdit, FaTrash, FaSave, FaTimesCircle } from "react-icons/fa";
+
 import { defaults } from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
-import Loading from "./Loading";
 import instance from "../lib/globals";
 
 defaults.scale.grid.display = false;
@@ -13,30 +14,61 @@ defaults.responsive = true;
 defaults.plugins.legend.display = false;
 defaults.plugins.title.display = false;
 
+const generateUUID = () => { // Public Domain/MIT
+  var d = new Date().getTime();//Timestamp
+  var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16;//random number between 0 and 16
+    if (d > 0) {//Use timestamp until depleted
+      r = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else {//Use microseconds since page-load if supported
+      r = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+    // eslint-disable-next-line
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
 
 const calculatePercentChange = (arr) => {
   if (!arr || arr.length < 2) {
-      // Not enough data to calculate percent change
-      return 0;
+    // Not enough data to calculate percent change
+    return 0;
   }
 
   let start = arr[0];
   let end = arr[arr.length - 1];
 
   if (start === 0 && end === 0) {
-      // No change if both start and end are 0
-      return 0;
+    // No change if both start and end are 0
+    return 0;
   } else if (start === 0) {
-      // If starting from 0 and ending with a non-zero value, it's a 100% increase
-      return 100;
+    // If starting from 0 and ending with a non-zero value, it's a 100% increase
+    return 100;
   } else {
-      // Normal percent change calculation
-      return (((end - start) / start) * 100).toFixed(2);
+    // Normal percent change calculation
+    return (((end - start) / start) * 100).toFixed(2);
   }
 }
 
+const getCSV = (rows) => {
+  let csvContent = "data:text/csv;charset=utf-8,"
+    + rows.map(e => e.join(",")).join("\n");
 
-const KPIChart = forwardRef(({title, unit, values, total}, ref) => {
+  // For compatibility with various browsers
+  var encodedUri = encodeURI(csvContent);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "schedule.csv");
+  document.body.appendChild(link); // Required for FF
+
+  link.click(); // Trigger download
+  document.body.removeChild(link); // Clean up
+}
+
+// COMPONENTS
+const KPIChart = forwardRef(({ title, unit, values, total }, ref) => {
   const percentChange = calculatePercentChange(values);
   let borderColor = percentChange > 0 ? '#27ae60' : percentChange < 0 ? '#c0392b' : '#2c3e50';
   const minValue = Math.min(...values) - 0.2;
@@ -66,17 +98,17 @@ const KPIChart = forwardRef(({title, unit, values, total}, ref) => {
 
   return (
     <div ref={chartCardRef} className="chart-card">
-      <h3>{ title } {total ? `(Last 30 Days)` : ''}</h3>
+      <h3>{title} {total ? `(Last 30 Days)` : ''}</h3>
       <div className="kpi-card">
         <div className="kpi-data">
-          <h1 ref={h1Ref}>{ total ? values.reduce((accum,val) => accum+val, 0) : values.at(-1) } </h1>
+          <h1 ref={h1Ref}>{total ? values.reduce((accum, val) => accum + val, 0) : values.at(-1)} </h1>
           {/* <h1>{ values.at(-1) }</h1> */}
-          <p style={{marginBottom:"auto"}}>{unit}</p>
-          {!total && <p style={{color: borderColor}}> { percentChange > 0 ? '+' : '' }{ percentChange }%</p>}
+          <p style={{ marginBottom: "auto" }}>{unit}</p>
+          {!total && <p style={{ color: borderColor }}> {percentChange > 0 ? '+' : ''}{percentChange}%</p>}
           {/* <p style={{color: borderColor}}> { percentChange > 0 ? '+' : '' }{ percentChange }% Last { values.length } Days</p> */}
         </div>
         <div className="kpi-chart">
-          <Line 
+          <Line
             ref={ref}
             data={{
               // labels: [...Array(values[0].length)].map(x => 'test'),
@@ -90,11 +122,11 @@ const KPIChart = forwardRef(({title, unit, values, total}, ref) => {
                   if (ref.current) {
                     const chartInstance = ref.current; // Access the chart instance
                     const ctx = chartInstance.ctx;
-              
+
                     const gradient = ctx.createLinearGradient(0, 0, 0, chartInstance.height);
                     gradient.addColorStop(0.25, borderColor + '88'); // Use the borderColor as the start color
                     gradient.addColorStop(0.9, "#FFF"); // End color
-                    
+
                     return gradient;
                   }
                 },
@@ -124,21 +156,6 @@ const KPIChart = forwardRef(({title, unit, values, total}, ref) => {
     </div>
   )
 });
-
-const getCSV = (rows) => {
-  let csvContent = "data:text/csv;charset=utf-8," 
-      + rows.map(e => e.join(",")).join("\n");
-
-  // For compatibility with various browsers
-  var encodedUri = encodeURI(csvContent);
-  var link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "schedule.csv");
-  document.body.appendChild(link); // Required for FF
-
-  link.click(); // Trigger download
-  document.body.removeChild(link); // Clean up
-}
 
 const ScheduleTable = ({ schedules }) => {
   const [selectedDropdown, setSelectedDropdown] = useState(null);
@@ -262,7 +279,7 @@ const ScheduleTable = ({ schedules }) => {
           const csvRows = sortedSchedules.map(schedule => [
             `${schedule.First_Name} ${schedule.Last_Name || ''}`,
             new Date(schedule.Start_Date).toLocaleDateString(),
-            `${new Date(schedule.Start_Date).toLocaleTimeString('en-us', {"hour12": false, "hour": "2-digit", "minute": "2-digit"})} - ${new Date(schedule.End_Date).toLocaleTimeString('en-us', {"hour12": false, "hour": "2-digit", "minute": "2-digit"})}`,
+            `${new Date(schedule.Start_Date).toLocaleTimeString('en-us', { "hour12": false, "hour": "2-digit", "minute": "2-digit" })} - ${new Date(schedule.End_Date).toLocaleTimeString('en-us', { "hour12": false, "hour": "2-digit", "minute": "2-digit" })}`,
             schedule.Email,
             schedule.Phone
           ]);
@@ -273,35 +290,224 @@ const ScheduleTable = ({ schedules }) => {
   );
 };
 
-const Dashboard = ({community, showSwitchCommunity, switchCommunity}) => {
-  const [isLoading, setIsLoading] = useState(true);
+const EditPrayerPoints = ({ value, setValue, submit }) => {
+  const [tempValue, setTempValue] = useState(value);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleCancel = () => {
+    setTempValue(value);
+    setIsEditing(false);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setValue(tempValue);
+    setIsEditing(false);
+
+    submit(tempValue);
+  }
+
+  return (
+    <form id="prayer-point-form" onSubmit={handleSubmit}>
+      <div className="header-row">
+        <label htmlFor="prayer-points">Prayer Points:</label>
+        <div className="button-container">
+          {!isEditing && <button className="btn" type="button" onClick={() => setIsEditing(true)}>Edit</button>}
+          {isEditing && <button className="btn" type="button" onClick={handleCancel}>Cancel</button>}
+          {isEditing && <button className="btn highlight" type="submit">Submit</button>}
+        </div>
+      </div>
+      <div className="input-container">
+        <textarea id="prayer-points" placeholder="Example: Unity in the church" maxLength="90" value={tempValue} onInput={(e) => setTempValue(e.target.value)} disabled={!isEditing} required></textarea>
+      </div>
+    </form>
+  )
+}
+
+const EditReservationDays = ({ communityID, reservations, setReservations, submit, remove }) => {
+  // const [tempReservations, setTempReservations] = useState(reservations);
+  const [selectedReservation, setSelectedReservation] = useState(null);
+  const [newDateFieldValue, setNewDateFieldValue] = useState('');
+  const [editDateFieldValue, setEditDateFieldValue] = useState(null);
+
+  const handleCreate = () => {
+    if (!newDateFieldValue) return;
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because getMonth() returns zero-based index
+    const day = today.getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+
+    if (newDateFieldValue < formattedDate) return alert('Cannot create past reservations.');
+
+    const reservationToCreate = {
+      WPAD_Community_ID: communityID,
+      Reservation_Date: `${newDateFieldValue}T00:00:00`
+    };
+    setNewDateFieldValue('');
+
+    const tempReservations = structuredClone(reservations);
+    tempReservations.push({ ...reservationToCreate, WPAD_Community_Reservation_ID: generateUUID() });
+    setReservations(tempReservations.sort((a, b) => new Date(a.Reservation_Date) - new Date(b.Reservation_Date)));
+
+    submit(reservationToCreate);
+  }
+
+  const handleEdit = (id) => {
+    const currReservation = reservations.find(day => day.WPAD_Community_Reservation_ID === id);
+    // console.log(currReservation);
+    setSelectedReservation(currReservation);
+    setEditDateFieldValue(new Date(currReservation.Reservation_Date).toISOString().split('T')[0]);
+  }
+
+  const handleCancel = () => {
+    setSelectedReservation(null);
+    setEditDateFieldValue(null);
+  }
+
+  const handleSubmit = () => {
+    const tempReservations = reservations;
+    const resToChange = tempReservations.find(day => day.WPAD_Community_Reservation_ID === selectedReservation.WPAD_Community_Reservation_ID);
+    resToChange.Reservation_Date = editDateFieldValue + 'T00:00:00';
+
+    setReservations(tempReservations);
+    handleCancel();
+
+    submit(resToChange);
+  }
+
+  const handleDelete = () => {
+    const tempReservations = reservations;
+
+    setReservations(tempReservations.filter(res => res.WPAD_Community_Reservation_ID !== selectedReservation.WPAD_Community_Reservation_ID));
+    handleCancel();
+
+    remove(selectedReservation.WPAD_Community_Reservation_ID);
+  }
+
+  return (
+    <div id="reservation-table-container">
+      <div id="new-prayer-day-container">
+        <p>Add new prayer day:</p>
+        <div className="input-container">
+          <input type="date" id="new-prayer-date" value={newDateFieldValue} onChange={(e) => setNewDateFieldValue(e.target.value)} />
+          <button className="btn highlight" onClick={handleCreate}>Submit</button>
+        </div>
+      </div>
+
+      <div id="reservation-table">
+        <div className="data-row header">
+          <p>My Prayer Days:</p>
+        </div>
+        {reservations.map((day, i) => {
+          const { Reservation_Date, WPAD_Community_Reservation_ID: id } = day;
+          const currDate = new Date(Reservation_Date);
+          const dateString = currDate.toLocaleDateString('en-us', { weekday: "short" }) + " " + currDate.toLocaleDateString();
+          const selectedID = selectedReservation?.WPAD_Community_Reservation_ID;
+          return (
+            <div className="data-row" id={`row-${id}`} key={id}>
+              <div className="date-label">
+                {selectedID === id ? <input type="date" value={editDateFieldValue} onChange={(e) => setEditDateFieldValue(e.target.value)} /> : dateString}
+              </div>
+              {selectedID !== id && <button title="edit date" className="reservation-edit-btn btn" onClick={() => handleEdit(id)}><FaEdit /></button>}
+              {selectedID === id && <button title="delete date" className="reservation-delete-btn btn" onClick={handleDelete}><FaTrash /></button>}
+              {selectedID === id && <button title="save date" className="reservation-save-btn btn" onClick={handleSubmit}><FaSave /></button>}
+              {selectedID === id && <button title="cancel" className="reservation-cancel-btn btn" onClick={handleCancel}><FaTimesCircle /></button>}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+const Dashboard = ({ community, showSwitchCommunity, switchCommunity, setIsLoading }) => {
+  // const [isLoading, setIsLoading] = useState(true);
 
   const [allCommunityPrayers, setAllCommunityPrayers] = useState([]);
+  const [allCommunityReservations, setAllCommunityReservations] = useState([]);
   const [hoursCovered, setHoursCovered] = useState([]);
   const [uniqueUsers, setUniqueUsers] = useState([]);
   const [uniqueUserSignupsWithinPeriod, setUniqueUserSignupsWithinPeriod] = useState([]);
-  const [period, setPeriod] = useState(30);
-  // const period = 30;
+  // const [period, setPeriod] = useState(30);
+  const period = 30;
 
   const [usersByEarliestSignup, setUsersByEarliestSignup] = useState({});
+
+  const [prayerPoints, setPrayerPoints] = useState(community.Reminder_Text);
 
   const getCommunityPrayers = async (id) => instance.get(`/api/wpad/communityPrayers/${id}`)
     .then(response => response.data);
 
+  const getCommunityReservations = async (id) => instance.get(`/api/wpad/communityReservations/${id}`)
+    .then(response => response.data);
+
+  const updatePrayerPoints = async (id, data) => instance.post(`/api/wpad/prayerPoints/${id}`, data)
+    .then(response => response.data);
+
+  const updateReservation = async (id, data) => instance.post(`/api/wpad/communityReservation/${id}`, data)
+    .then(response => response.data);
+
+  const deleteReservation = async (id, resID) => instance.delete(`/api/wpad/communityReservation/${id}/${resID}`)
+    .then(response => response.data);
+
+
   useEffect(() => {
+    const getCommunityData = async () => {
+      try {
+        const { WPAD_Community_ID } = community;
+
+        setIsLoading(true);
+        const tempCommunityPrayers = await getCommunityPrayers(WPAD_Community_ID);
+        setAllCommunityPrayers(tempCommunityPrayers);
+
+        const tempCommunityReservations = await getCommunityReservations(WPAD_Community_ID);
+        setAllCommunityReservations(tempCommunityReservations);
+
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        console.log('something went wront')
+      }
+    }
+    getCommunityData()
+  }, [community, setIsLoading]);
+
+  const handlePrayerPointsFormSubmit = (prayerPoints) => {
     try {
       const { WPAD_Community_ID } = community;
 
-      // setIsLoading(true);
-      getCommunityPrayers(WPAD_Community_ID)
-        .then(data => {
-          setAllCommunityPrayers(data);
-          setIsLoading(false);
-        });
+      setIsLoading(true);
+      updatePrayerPoints(WPAD_Community_ID, { Reminder_Text: prayerPoints })
+        .then(() => setIsLoading(false));
     } catch (error) {
       console.log('something went wront')
     }
-  }, [community, setIsLoading]);
+  }
+
+  const handleReservationChangeSubmit = (reservation) => {
+    try {
+      const { WPAD_Community_ID } = community;
+
+      setIsLoading(true);
+      updateReservation(WPAD_Community_ID, reservation)
+        .then(() => setIsLoading(false));
+    } catch (error) {
+      console.log('something went wront')
+    }
+  }
+
+  const handleDeleteReservation = (reservationID) => {
+    try {
+      const { WPAD_Community_ID } = community;
+
+      setIsLoading(true);
+      deleteReservation(WPAD_Community_ID, reservationID)
+        .then(() => setIsLoading(false));
+    } catch (error) {
+      console.log('something went wront')
+    }
+  }
 
   useEffect(() => {
     const periodList = [];
@@ -318,14 +524,10 @@ const Dashboard = ({community, showSwitchCommunity, switchCommunity}) => {
 
     setHoursCovered(periodList.map(date => allCommunityPrayers.filter(prayer => new Date(prayer.Start_Date).toISOString().split('T')[0] <= date).length));
 
-    // setTotalHoursCovered(allCommunityPrayers.length);
-    // setUniqueUsers([...new Set(allCommunityPrayers.map(prayer => prayer.Email))].length);
-
-    // console.log(allCommunityPrayers)
     allCommunityPrayers.forEach(prayer => {
       const { Email, _Signup_Date } = prayer;
       let tempUsersByEarliestSignup = usersByEarliestSignup;
-      
+
       if (usersByEarliestSignup[Email]) {
         // compare signup dates
         if (usersByEarliestSignup[Email] > new Date(_Signup_Date)) {
@@ -340,15 +542,14 @@ const Dashboard = ({community, showSwitchCommunity, switchCommunity}) => {
 
     setUniqueUsers(periodList.map(date => Object.values(usersByEarliestSignup).filter(startDate => startDate.toISOString().split('T')[0] <= date).length));
     setUniqueUserSignupsWithinPeriod(periodList.map(date => Object.values(usersByEarliestSignup).filter(startDate => startDate.toISOString().split('T')[0] === date).length));
-    // setCountOfUniqueUserSignupsWithinPeriod(Object.values(usersByEarliestSignup).filter(date => date >= new Date(new Date() - (1000*60*60*24*period))).length);
 
-  }, [allCommunityPrayers, usersByEarliestSignup, period])
+  }, [allCommunityPrayers, usersByEarliestSignup]);
+
   return (
     <div id="dashboard-container">
-      {isLoading && <Loading />}
       <div id="dashboard-header">
         <div className="header-row">
-          <h2 style={{margin: !showSwitchCommunity ? "0 auto" : "0"}}>{community.Community_Name}</h2>
+          <h2 style={{ margin: !showSwitchCommunity ? "0 auto" : "0" }}>{community.Community_Name}</h2>
           {showSwitchCommunity && <button className="btn icon" onClick={switchCommunity} title="Edit Selected Church/Community"><BsBoxArrowLeft /></button>}
         </div>
         <div className="scroll-container">
@@ -362,7 +563,12 @@ const Dashboard = ({community, showSwitchCommunity, switchCommunity}) => {
           </div>
         </div>
       </div>
-      <ScheduleTable schedules={allCommunityPrayers}/>
+      <ScheduleTable schedules={allCommunityPrayers} />
+
+      <div className="dashboard-row">
+        <EditPrayerPoints value={prayerPoints} setValue={setPrayerPoints} submit={handlePrayerPointsFormSubmit} />
+        <EditReservationDays communityID={community.WPAD_Community_ID} reservations={allCommunityReservations} setReservations={setAllCommunityReservations} submit={handleReservationChangeSubmit} remove={handleDeleteReservation} />
+      </div>
     </div>
   )
 }
