@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9498f499.css",
+    "main.js": "/static/js/main.1042fbd0.js",
+    "static/media/Tropiline-Black.otf": "/static/media/Tropiline-Black.a734f56ed4c720126c1e.otf",
+    "static/media/homepage-banner-arizona.png": "/static/media/homepage-banner-arizona.abdeb3c932605cf0f325.png",
+    "static/media/final-logo-transparent.png": "/static/media/final-logo-transparent.1d7a5db3bbd74cda0d94.png",
+    "static/media/Proxima-Nova.otf": "/static/media/Proxima-Nova.7bc9ce404c297c24f210.otf",
+    "index.html": "/index.html",
+    "main.9498f499.css.map": "/static/css/main.9498f499.css.map",
+    "main.1042fbd0.js.map": "/static/js/main.1042fbd0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9498f499.css",
+    "static/js/main.1042fbd0.js"
+  ]
+}
