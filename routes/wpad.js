@@ -14,7 +14,7 @@ const getWPADEmailTemplate = ({First_Name, DateString, TimeString, Dates}) => {
   <body style="margin: 0;padding: 0;font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
     <div class="container" style="max-width: 768px;margin: 0 auto;background-color: #f1f2f6 !important;">
       <div class="img-container" style="background-color: #2e2d2b !important;color: white;display: grid;place-items: center;font-size: 1.2rem;padding: 1rem;">
-        <img src="http://weprayallday.com/assets/final-logo-transparent.png" alt="We Pray All Day" style="width: 300px;max-width: 90%;margin: 0 auto;">
+        <img src="http://weprayallday.com/static/media/final-logo-transparent.1d7a5db3bbd74cda0d94.png" alt="We Pray All Day" style="width: 300px;max-width: 90%;margin: 0 auto;">
       </div>
       <p id="banner" style="background-image:url('https://www.pureheart.org/wp-content/uploads/2024/03/wpadyellow.png');background-repeat:repeat;width: 100%;color: black;margin: 0;padding: 1rem 0;text-align: center;text-transform: uppercase;font-weight: bold;">Thanks for signing up to pray</p>
       <div class="content" style="max-width: 90%;margin: 0 auto;padding: 1rem;">
@@ -249,7 +249,7 @@ router.post('/ConfirmationEmail', async (req, res) => {
   try {
     const msg = {
       to: Email,
-      from: "noreply@pureheart.org",
+      from: "noreply@weprayallday.com",
       subject: "We Pray All Day",
       html: getWPADEmailTemplate(req.body)
     };
