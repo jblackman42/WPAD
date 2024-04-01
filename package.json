@@ -15,6 +15,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
+    "ical-generator": "^7.0.0",
     "ministry-platform-api-wrapper": "^1.1.2",
     "node-cron": "^3.0.3",
     "nodemon": "^3.1.0",

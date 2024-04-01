@@ -41,7 +41,7 @@ const Calendar = () => {
   }
 
   const SignUp = (e, date, hour) => {
-    if ([...e.target.classList].includes('hour') && !hour) return;
+    if ([...e.target.classList].includes('hour') && hour === null) return;
     return window.location = hour ? `/signup?date=${date}&hour=${hour}` : `/signup?date=${date}`
   }
 
