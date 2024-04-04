@@ -159,7 +159,7 @@ const KPIChart = forwardRef(({ title, unit, values, total }, ref) => {
 
 const ScheduleTable = ({ schedules }) => {
   const [selectedDropdown, setSelectedDropdown] = useState(null);
-  const [timeFilter, setTimeFilter] = useState('YTD'); // State for tracking the current filter
+  const [timeFilter, setTimeFilter] = useState('This Month'); // State for tracking the current filter
 
   const filteredSchedules = useMemo(() => {
     const now = new Date();
