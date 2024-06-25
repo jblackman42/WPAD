@@ -5,6 +5,11 @@ const About = () => {
   return <>
     <Navbar />
 
+    <section className="about-us" id="mission-statement">
+      <div className="col flex-1">
+        <h1>Our mission is to see the Church united in seeking to host the presence of God for the transformation of our communities and state, and the awakening of the generations to the purposes of God.</h1>
+      </div>
+    </section>
     <section className="about-us" id="about-us-video">
       <div className="video-container">
         <iframe title="Chris Intro Video" src="https://player.vimeo.com/video/794173767?h=9959b4b331" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" />    

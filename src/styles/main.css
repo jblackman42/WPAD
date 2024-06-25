@@ -1618,6 +1618,11 @@ footer a:hover, footer p:hover {
   }
 }
 
+#mission-statement h1 {
+  text-align: justify;
+  font-size: clamp(1rem, 5vw, 2rem);
+}
+
 #leader {
   width: clamp(50vw, 1280px, 90vw);
   margin: 0 auto;
