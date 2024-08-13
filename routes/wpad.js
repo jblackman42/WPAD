@@ -288,16 +288,20 @@ router.post('/CommunityRegister', async (req, res) => {
     if (matchingCommunity && matchingCommunity.length > 0) {
       return res.status(400).send("Community with this name already exists.");
     }
+    const matchingUser = await MinistryPlatformAPI.request('get', '/tables/dp_Users', {"$select": "User_ID", "$filter": `User_Name='${username}'`})
+    if (matchingUser && matchingUser.length > 0) {
+      return res.status(400).send("User with this name already exists.");
+    }
     // create community
     const [community] = await MinistryPlatformAPI.request('post', '/tables/WPAD_Communities', {}, [{"Community_Name":communityName,"Address":address,"City":city,"State":state,"Zip":postalCode,"Start_Date":formattedDate}]);
     // console.log(community);
     // find user
     const [[user]] = await MinistryPlatformAPI.request('post', '/procs/api_WPAD_Force_New_Contact', {}, {"@FirstName": firstName,"@LastName": lastName,"@EmailAddress": email,"@PhoneNumber": phone,"@Username": username,"@Password": hashPassword(password),"@AddressLine1": address,"@City": city,"@State": state,"@PostalCode": postalCode});
-    // console.log(user);
     // make user authorized user for community
     await MinistryPlatformAPI.request('post', '/tables/WPAD_Authorized_Users', {}, [{"WPAD_Community_ID": community.WPAD_Community_ID,"user_ID": user.User_Account}]);
     res.sendStatus(200);
   } catch (error) {
+    console.error(error);
     res.sendStatus(500);
   }
 })
