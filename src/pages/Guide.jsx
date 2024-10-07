@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Loading } from "../components";
 
-const currentGuidePath = '/guide/Aug 2024.pdf'
+const currentGuidePath = '/guide/Oct 2024.pdf'
 
 const Guide = () => {
   useEffect(() => {
