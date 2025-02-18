@@ -27,7 +27,7 @@ const Navbar = () => {
         </a>
       </div>
       <div id="links-container" className={open ? "open" : ""}>
-        <div className="link"><a href="/notaboutus">Not About Us</a></div>
+        {/* <div className="link"><a href="/notaboutus">Not About Us</a></div> */}
         <div className="link"><a href="/leaders">Leaders</a></div>
         <div className="link"><a href="/dashboard">Dashboard</a></div>
         {isLoggedIn && <div className="link"><a href="/logout">Logout</a></div>}

@@ -9,7 +9,7 @@ const Footer = () => {
       </div>
       <div className="links">
         <a href="/">Home</a>
-        <a href="/notaboutus">Not About Us</a>
+        {/* <a href="/notaboutus">Not About Us</a> */}
         <a href="/leaders">Leaders</a>
         <a href="/dashboard">Dashboard</a>
       </div>

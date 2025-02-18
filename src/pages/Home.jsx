@@ -22,7 +22,7 @@ const Home = () => {
         <p style={{textAlign:"right"}}>Ephesians 6:18 NLT</p>
         <div className="button-container">
           <button className="btn highlight" onClick={scrollToCalendar}>Get Started</button>
-          <a href="/notaboutus" className="btn">How Does It Work</a>
+          <a href="/about" className="btn">How Does It Work</a>
         </div>
       </section>
       <section className="content">
