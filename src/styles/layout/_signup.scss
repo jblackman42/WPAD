@@ -38,7 +38,7 @@ $form-gap: 1rem;
     &>.input-container {
         display: flex;
         flex-direction: column;
-        width: calc(50% - ($form-gap / 2));
+        width: calc(50% - #{$form-gap} / 2);
 
         @media screen and (max-width: 768px) {
             width: 100%;
@@ -239,7 +239,8 @@ $form-gap: 1rem;
 
     #hours-options {
         display: grid;
-        grid-template-columns: repeat(12, 1fr);
+        // grid-template-columns: repeat(12, 1fr);
+        grid-template-columns: repeat(24, 1fr);
         margin: 0 auto;
         gap: .5rem;
 

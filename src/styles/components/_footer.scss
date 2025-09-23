@@ -19,14 +19,6 @@ footer {
     gap: $gap;
     a {
       position: relative;
-      &:not(:last-of-type):after {
-        content: '';
-        position: absolute;
-        height: 100%;
-        width: 1px;
-        right: calc($gap / -2);
-        background-color: $primary-white;
-      }
     }
   }
   a, p {

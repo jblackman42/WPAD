@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Navbar, Footer, Calendar } from "../components";
+import { Navbar, Footer, WeekCalendar } from "../components";
 import homepageBanner from "../assets/homepage-banner-arizona.png";
 
 const Home = () => {
@@ -45,7 +45,8 @@ const Home = () => {
     </div>
 
     <div ref={calendarRef}>
-      <Calendar />
+      {/* <Calendar /> */}
+      <WeekCalendar/>
     </div>
 
     <Footer />

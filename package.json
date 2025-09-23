@@ -34,6 +34,7 @@
   "scripts": {
     "serve": "nodemon server.js",
     "start": "react-scripts start",
+    "dev": "concurrently \"npm run serve\" \"npm run start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -44,6 +45,7 @@
       "react-app/jest"
     ]
   },
+  "proxy": "http://localhost:5001",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -57,6 +59,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "concurrently": "^9.2.0"
   }
 }

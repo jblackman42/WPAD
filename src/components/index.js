@@ -2,6 +2,8 @@ import AuthPage from "./AuthPage";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Calendar from "./Calendar";
+import WeekCalendar from "./WeekCalendar";
+import WeekSelector from "./WeekSelector";
 import Loading from "./Loading";
 import Dashboard from "./Dashboard";
 
@@ -10,6 +12,8 @@ export {
   Navbar,
   Footer,
   Calendar,
+  WeekCalendar,
+  WeekSelector,
   Loading,
   Dashboard
 }

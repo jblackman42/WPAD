@@ -29,8 +29,11 @@ app.use(passport.session());
 
 
 // add middlewares
-const root = require('path').join(__dirname, 'build');
-app.use(express.static(root));
+// Serve static files from the React app only in production
+if (process.env.NODE_ENV === 'production') {
+  const root = require('path').join(__dirname, 'build');
+  app.use(express.static(root));
+}
 
 app.use('/api/wpad', require('./routes/wpad.js'));
 app.use('/calendar-invite', (req, res) => {
@@ -65,12 +68,15 @@ app.use('/calendar-invite', (req, res) => {
     res.status(500).send({error: 'Something went wrong. Please try again later.'})
   }
 });
-app.use('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+// Serve React app only in production
+if (process.env.NODE_ENV === 'production') {
+  app.use('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
+}
 
 // Start the server
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 (async () => {
   try {
     app.listen(port,()=>console.log(`Server is listening on port ${port} - http://localhost:${port}`));

@@ -1,0 +1,439 @@
+.calendar-container {
+  width: 100%;
+  background-color: $primary-black;
+}
+
+.week-calendar-container {
+  background-color: $primary-black;
+  color: $primary-white;
+  font-family: Proxima-nova, sans-serif;
+  margin: 0;
+  width: clamp(70vw, 1280px, 95vw);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: stretch; // Ensure children stretch to same height
+
+  h1 {
+    padding: 0;
+    margin: 0;
+  }
+
+  .calendar-col-1 {
+    // width: 300px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    height: fit-content; // Set height based on content
+    overflow-x: auto;
+
+    .filter-container {
+      background-color: $primary-white;
+      color: $primary-black;
+      border-radius: 1rem;
+      margin-top: 1rem;
+      padding-bottom: 1rem;
+      font-family: Proxima-nova, sans-serif;
+      box-sizing: border-box;
+      width: 100%;
+      flex: 1; // Takes remaining space after week selector
+      min-height: 0; // Allow flex item to shrink
+
+      .scroll-container {
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 0.5rem 1rem;
+        padding-bottom: 0;
+        &::-webkit-scrollbar {
+          width: 8px;
+          background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: transparent;
+        }
+      }
+
+      .filter-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #e2dacf;
+        padding: 1rem;
+        padding-bottom: 0.5rem;
+
+        h3 {
+          margin: 0;
+          font-size: 1.25rem;
+          font-weight: 600;
+        }
+
+        .clear-filter-btn {
+          background-color: transparent;
+          color: $primary-black;
+          border: 1px solid $primary-black;
+          outline: none;
+          border-radius: 0.5rem;
+          padding: 0.25rem 0.75rem;
+          font-size: 0.875rem;
+          font-weight: 600;
+          cursor: pointer;
+
+          &:hover, &:focus-visible {
+            background-color: #e2dacf;
+          }
+        }
+      }
+
+      .filter-community-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 0.25rem;
+
+        input[type="checkbox"] {
+          width: 1rem;
+          height: 1rem;
+          cursor: pointer;
+          accent-color: $accent-yellow-2;
+        }
+
+        label {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          cursor: pointer;
+          font-size: 1rem;
+          font-weight: 500;
+          user-select: none;
+          flex: 1;
+        }
+      }
+    }
+  }
+
+  .calendar-col-2 {
+    width: 100%;
+    display: flex;
+    align-items: stretch; // Stretch to match parent height
+
+    .week-calendar {
+      background-color: $primary-white;
+      color: $primary-black;
+      border-radius: 1rem;
+      padding: 1rem;
+      width: 100%;
+      min-height: 100%; // Ensure it takes full height of parent
+      box-sizing: border-box;
+      
+      display: grid;
+      grid-template-rows: auto 1fr;
+      .week-navigation {
+        background-color: $primary-white;
+        color: $primary-black;
+        border-radius: 1rem;
+        // padding: 1rem;
+        margin-block: 0.5rem 1.5rem;
+        font-family: Proxima-nova, sans-serif;
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.25rem 0.5rem;
+          gap: 1rem;
+
+          .header-left {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-shrink: 0;
+
+            h2 {
+              font-size: clamp(1.5rem, 4vw, 2rem);
+              font-weight: 600;
+              margin: 0;
+              flex-shrink: 0;
+            }
+
+            .navigation-controls {
+              display: flex;
+              gap: 0.5rem;
+              flex-shrink: 0;
+
+              button {
+                background-color: transparent;
+                border: none;
+                outline: none;
+                padding: 0;
+                margin: 0;
+                cursor: pointer;
+                display: block;
+                font-size: clamp(1.5rem, 4vw, 2rem);
+                font-weight: 600;
+                aspect-ratio: 1 / 1;
+                border-radius: 100%;
+                display: grid;
+                place-items: center;
+                
+                &:hover, &:focus {
+                  background-color: #e2dacf;
+                }
+                
+                &:focus {
+                  outline: 1px solid $accent-yellow-2;
+                }
+              }
+            }
+          }
+
+          .champion-button {
+            background-color: $accent-yellow;
+            color: $primary-black;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+
+            &:hover, &:focus {
+              background-color: darken($accent-yellow, 10%);
+            }
+
+            &:focus-visible {
+              outline: 2px solid $accent-yellow-2;
+              outline-offset: 2px;
+            }
+
+            display: none;
+            visibility: hidden;
+          }
+        }
+      }
+
+      .week-container {
+        gap: 0.5rem;
+        display: flex;
+        flex-direction: column; 
+        justify-content: flex-start;
+        align-items: flex-start; // Stretch children to fill height
+        text-decoration: none;
+
+  
+        .weekday-container {
+          display: grid;
+          grid-template-columns: min-content min-content 1fr;
+          align-items: center;
+          width: 100%;
+          justify-content: flex-start; // Align content to top
+
+          text-decoration: none;
+          color: $primary-black;
+          // padding: .5rem;
+          border-radius: 1rem;
+          box-sizing: border-box;
+
+          background-color: #e2dacf;
+          // &:hover, &:focus {
+          // }
+
+          &:focus-visible {
+            outline: 2px solid $accent-yellow-2;
+            outline-offset: 2px;
+          }
+  
+          &.today .weekday-day {
+            background-color: $accent-yellow;
+            color: $primary-black;
+          }
+        }
+  
+        .weekday-day {
+          font-size: clamp(1.25rem, 4vw, 2.5rem);
+          font-weight: bold;
+          background-color: $primary-black;
+          color: $primary-white;
+          // width: max-content;
+          width: 135px;
+          max-width: 20vw;
+          aspect-ratio: 1 / 1;
+          display: grid;
+          place-items: center;
+          // padding: 1.5rem 2rem;
+          padding: 1.25rem;
+          box-sizing: border-box;
+          border-radius: 1rem;
+        }
+  
+        .weekday-date {
+          padding: .5rem;
+          font-size: 1.5rem;
+        }
+  
+
+        .champion-list {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          padding: 0.5rem;
+          box-sizing: border-box;
+        }
+
+        .champion-container {
+          width: 100%;
+          // min-height: 120px;
+          height: fit-content;
+          // aspect-ratio: 5/4;
+          color: $primary-black;
+          text-decoration: none;
+          padding: 0.25rem 0.5rem;
+          border-radius: 1rem;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          * { margin: 0; }
+  
+          // &:not(:first-of-type) {
+          //   margin-top: 0.5rem;
+          // }
+  
+          .champion-label {
+            display: none;
+            visibility: hidden;
+
+            font-size: clamp(14px, 2vw, 16px);
+            text-wrap: nowrap;
+          }
+  
+          .champion-name {
+            font-size: clamp(14px, 2vw, 16px);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .pick-hour-btn {
+            display: none;
+            visibility: hidden;
+
+            background-color: $primary-white;
+            color: $primary-black;
+            text-decoration: none;
+            padding: 0;
+            font-size: 12px;
+            border-radius: 1rem;
+            width: 100%;
+            border: none;
+            text-align: center;
+            padding-block: 3px 0;
+            margin-top: auto;
+            text-wrap: nowrap;
+          }
+
+          &.no-champion {
+            border: 2px solid #83afd4;
+
+            .pick-hour-btn {
+              background-color: #0b69c4;
+              color: $primary-white;
+            }
+
+            .champion-label {
+              display: block;
+              visibility: visible;
+            }
+
+            .champion-name {
+              display: none;
+              visibility: hidden;
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  @media screen and (min-width: 512px) {
+    .calendar-col-1 {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      .week-selector {
+        width: auto;
+      }
+      .filter-container {
+        margin: 0;
+        width: 100%;
+      }
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    flex-direction: row;
+    .calendar-col-1 {
+      flex-direction: column;
+      max-width: 15vw;
+      min-width: 290px;
+      overflow: hidden;
+    }
+    .calendar-col-2 .week-calendar .week-container {
+      flex-direction: row;
+      .weekday-date {
+        padding: 0;
+      }
+      .champion-list {
+        padding: 0;
+      }
+      .weekday-container {
+        background-color: transparent;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        &:hover, &:focus-visible {
+          background-color: #e2dacf;
+        }
+
+        .weekday-day {
+          width: 100%;
+          aspect-ratio: 0;
+        }
+        
+        .champion-container {
+          padding: 0.5rem;
+          .champion-label {
+            font-size: 12px;
+          }
+          .champion-name {
+            font-size: clamp(14px, 1vw, 16px);
+          }
+          .pick-hour-btn {
+            margin-block: 0.5rem 0;
+          }
+          * {
+            display: block !important;
+            visibility: visible !important;
+            white-space: normal;
+            overflow: visible;
+          }
+        }
+      }
+    }
+  }
+}

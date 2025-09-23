@@ -14,7 +14,7 @@ const Footer = () => {
         <a href="/dashboard">Dashboard</a>
       </div>
       <a href="mailto:info@weprayallday.com">info@weprayallday.com</a>
-      <p>2024 © Better Together Church Network</p>
+      <p>2025 © Better Together Church Network</p>
     </footer>
   )
 }

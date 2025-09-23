@@ -4,7 +4,10 @@ import { FaInfo } from "react-icons/fa6";
 import instance from "../lib/globals.js";
 import { Navbar, Footer, Loading } from "../components";
 
-const hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+const timeSlots = [
+  0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5,
+  12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5
+];
 const urlParams = new URLSearchParams(window.location.search);
 const date = urlParams.get('date');
 const hour = urlParams.get('hour');
@@ -40,7 +43,7 @@ const SignUp = () => {
   const [sequenceDayPosition, setSequenceDayPosition] = useState("First");
   const [sequenceWeekdays, setSequenceWeekdays] = useState("Sunday");
   const [sequenceTotalOccurrences, setSequenceTotalOccurrences] = useState(1);
-  const [selectedHour, setSelectedHour] = useState(hour);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(hour);
 
   const [text5min, setText5min] = useState(true);
   const [text1hr, setText1hr] = useState(false);
@@ -117,15 +120,15 @@ const SignUp = () => {
     e.preventDefault();
     setIsLoading(true);
     const AZTimezoneOffset = 420;
-    const localStart = new Date(new Date(date).setHours(selectedHour));
-    const localEnd = new Date(new Date(date).setHours(parseInt(selectedHour) + 1));
+    const localStart = new Date(new Date(date).setHours(Math.floor(selectedTimeSlot), (selectedTimeSlot % 1) * 60));
+    const localEnd = new Date(new Date(localStart).getTime() + (30 * 60 * 1000)); // 30 minutes
 
     const signUpDates = recurringChecked ? signUpPattern : [date];
     const prayerSchedules = signUpDates.map(date => {
-      const localStartDate = new Date(new Date(date).setHours(selectedHour));
+      const localStartDate = new Date(new Date(date).setHours(Math.floor(selectedTimeSlot), (selectedTimeSlot % 1) * 60));
       const localTimezoneOffsetFromAZ = AZTimezoneOffset - localStartDate.getTimezoneOffset();
       const startDate = localStartDate.setMinutes(localStartDate.getMinutes() - localTimezoneOffsetFromAZ);
-      const endDate = startDate + (1000 * 60 * 60);
+      const endDate = startDate + (1000 * 60 * 30); // 30 minutes
 
       return {
         "First_Name": firstName,
@@ -152,7 +155,7 @@ const SignUp = () => {
           firstName,
           recurringChecked ? signUpPattern.map(date => new Date(date).toLocaleDateString('en-us', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })).join('</br>') : new Date(date).toLocaleDateString('en-us', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }),
           `${localStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${localEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
-          signUpDates.map(date => new Date(new Date(date).setHours(selectedHour)).toISOString())
+          signUpDates.map(date => new Date(new Date(date).setHours(Math.floor(selectedTimeSlot), (selectedTimeSlot % 1) * 60)).toISOString())
         );
         showPopup(
           "Thank you for signing up!",
@@ -188,7 +191,7 @@ const SignUp = () => {
   }, [allPrayerSchedules, allCommunityReservations, allCommunities]);
 
   useEffect(() => {
-    const localStartDate = selectedHour ? formatDate(new Date(new Date(date).setHours(selectedHour))) : formatDate(new Date(date));
+    const localStartDate = selectedTimeSlot !== null && selectedTimeSlot !== undefined ? formatDate(new Date(new Date(date).setHours(Math.floor(selectedTimeSlot), (selectedTimeSlot % 1) * 60))) : formatDate(new Date(date));
     const getSequence = async (sequenceInterval, sequenceDayPosition, sequenceWeekdays, sequenceTotalOccurrences) =>
       instance.get(`/api/wpad/GenerateSequence?Interval=${sequenceInterval}&StartDate=${localStartDate}&DayPosition=${sequenceDayPosition}&TotalOccurrences=${sequenceTotalOccurrences}&Weekdays=${sequenceWeekdays}`)
         .then(response => response.data)
@@ -204,7 +207,7 @@ const SignUp = () => {
         setSignUpPattern(tempSequence);
         setHightlightSequence(true);
       })
-  }, [recurringChecked, selectedHour, sequenceInterval, sequenceDayPosition, sequenceWeekdays, sequenceTotalOccurrences])
+  }, [recurringChecked, selectedTimeSlot, sequenceInterval, sequenceDayPosition, sequenceWeekdays, sequenceTotalOccurrences])
 
   return <>
     <Navbar />
@@ -324,13 +327,16 @@ const SignUp = () => {
 
       </div>
       <div className="time-container">
-        <label>Hour of Prayer:</label>
+        <label>Time of Prayer (30-minute slots):</label>
         <div id="hours-options">
-          {hours.map((hr, i) => {
+          {timeSlots.map((slot, i) => {
+            const hour = Math.floor(slot);
+            const minute = (slot % 1) * 60;
+            const timeString = `${hour === 0 ? 12 : hour > 12 ? hour - 12 : hour}:${minute === 0 ? '00' : '30'}<span style="font-size: 0.5em; margin-left: 0.5px;">${hour >= 12 ? 'pm' : 'am'}</span>`;
             return (
               <div className="checkbox-container" key={i}>
-                <input type="radio" name="hour" value={hr} id={hr} defaultChecked={hr === parseInt(selectedHour)} onClick={(e) => setSelectedHour(e.target.value)} className={hoursCovered.includes(hr) ? "covered" : ""} required />
-                <label htmlFor={hr}>{hr === 0 ? `12 AM` : hr === 12 ? `${hr} PM` : hr > 12 ? `${hr - 12} PM` : `${hr} AM`}</label>
+                <input type="radio" name="timeSlot" value={slot} id={`slot-${i}`} defaultChecked={slot === parseFloat(selectedTimeSlot)} onClick={(e) => setSelectedTimeSlot(parseFloat(e.target.value))} className={hoursCovered.includes(hour) ? "covered" : ""} required />
+                <label htmlFor={`slot-${i}`} dangerouslySetInnerHTML={{ __html: timeString }}></label>
               </div>
             )
           })}
@@ -338,9 +344,9 @@ const SignUp = () => {
       </div>
       <div className="form-footer">
         <p id="curr-time">{(() => {
-          const Start_Date = new Date(new Date(date).setHours(selectedHour));
-          const End_Date = new Date(new Date(Start_Date).getTime() + 3600000);
-          return selectedHour ? `Hour of Prayer: ${Start_Date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${End_Date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Please Select an Hour of Prayer";
+          const Start_Date = new Date(new Date(date).setHours(Math.floor(selectedTimeSlot), (selectedTimeSlot % 1) * 60));
+          const End_Date = new Date(new Date(Start_Date).getTime() + (30 * 60 * 1000));
+          return selectedTimeSlot !== null && selectedTimeSlot !== undefined ? `Time of Prayer: ${Start_Date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${End_Date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Please Select a Time of Prayer";
         })()}</p>
         <button className="btn highlight" type="submit">Submit</button>
       </div>

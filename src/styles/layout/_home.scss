@@ -69,7 +69,7 @@
         content: counter(list-counter);
         position: absolute;
         top: 50%;
-        left: calc($left-offset * -1);
+        left: $left-offset * -1;
         transform: translate(-100%, -50%);
         width: $list-num-size;
         height: $list-num-size;

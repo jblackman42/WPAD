@@ -1,0 +1,122 @@
+.week-selector {
+  background-color: $primary-white;
+  color: $primary-black;
+  font-family: Proxima-nova, sans-serif;
+  border-radius: 1rem;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0; // Allows flexbox to shrink content
+  flex-shrink: 0; // Prevents shrinking
+
+  $gap: 0.5rem;
+
+  button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: block;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    padding-top: 0.25rem;
+    gap: $gap;
+    min-width: 0; // Allows flexbox to shrink content
+
+    .header-right {
+      display: flex;
+      gap: $gap;
+      flex-shrink: 0; // Prevents buttons from shrinking
+    }
+
+    h2 {
+      // font-size: 1.25rem;
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-weight: 600;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0; // Allows text to truncate properly
+    }
+
+    button {
+      font-size: clamp(0.8rem, 4vw, 1.5rem);
+      font-weight: 600;
+      aspect-ratio: 1 / 1;
+      border-radius: 100%;
+      display: grid;
+      place-items: center;
+      &:hover, &:focus {
+        background-color: #e2dacf;
+      }
+      &:focus {
+        outline: 1px solid $accent-yellow-2;
+      }
+    }
+  }
+
+  .days-of-week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 0.25rem 0.5rem;
+    gap: $gap;
+    min-width: 0; // Allows grid to shrink content
+    .day {
+      text-align: center;
+      white-space: nowrap;
+    }
+  }
+
+  .month-days {
+    min-width: 0; // Allows flexbox to shrink content
+    &:hover .week, &:focus-within .week {
+      background-color: transparent !important;
+    }
+
+    .week {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: $gap;
+      border-radius: 1rem;
+      padding: 0.25rem 0.5rem;
+      
+      &.current {
+        background-color: #e2dacf;
+      }
+      &:hover, &:focus {
+        background-color: #e2dacf !important;
+      }
+      &:focus-visible {
+        outline: 1px solid $accent-yellow-2;
+      }
+      
+      .day {
+        text-align: center;
+        aspect-ratio: 1 / 1;
+  
+        display: grid;
+        place-items: center;
+        padding: 0.25rem;
+        border-radius: 100%;
+  
+        &.hidden {
+          opacity: 0.5;
+        }
+  
+        &.today {
+          background-color: $accent-yellow-2;
+        }
+      }
+    }
+
+  }
+}
