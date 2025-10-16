@@ -12,7 +12,7 @@ const About = () => {
     </section>
     <section className="about-us" id="about-us-video">
       <div className="video-container">
-        <iframe title="Chris Intro Video" src="https://player.vimeo.com/video/794173767?h=9959b4b331" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" />    
+        <iframe title="Chris Intro Video" src="https://player.vimeo.com/video/1128025838?h=3833ddbec4" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" />    
       </div>
     </section>
     <section className="about-us" id="about-us-content">

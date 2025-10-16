@@ -7,7 +7,7 @@ const Leaders = () => {
 
     <section id="leader">
       <div class="video-container">
-        <iframe title="Dan intro video" src="https://player.vimeo.com/video/793460981?h=85f2441f77" frameBorder="0" allow="autoplay; fullscreen; picture-in-picture" />
+        <iframe title="Dan intro video" src="https://player.vimeo.com/video/1128025838?h=3833ddbec4" frameBorder="0" allow="autoplay; fullscreen; picture-in-picture" />
       </div>
     </section>
 
