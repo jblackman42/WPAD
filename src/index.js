@@ -5,7 +5,7 @@ import {
   RouterProvider
 } from 'react-router-dom';
 
-import { Error, Home, About, Leaders, SignUp, Register, Guide, Dashboard, Login, Logout } from './pages';
+import { Error, Home, About, Leaders, SignUp, MediaLibrary, Register, Guide, Dashboard, Login, Logout } from './pages';
 import { AuthPage } from './components';
 import './styles/main.css';
 
@@ -48,6 +48,11 @@ const router = createBrowserRouter([
   {
     path: "/guide",
     element: <Guide />,
+    errorElement: <Error />,
+  },
+  {
+    path: "/medialibrary",
+    element: <MediaLibrary />,
     errorElement: <Error />,
   },
   {

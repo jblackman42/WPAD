@@ -6,6 +6,7 @@ import Register from './Register';
 import Guide from './Guide';
 import Dashboard from './Dashboard';
 import Login from './Login';
+import MediaLibrary from './MediaLibrary';
 import Error from './Error';
 import Logout from './Logout';
 
@@ -18,6 +19,7 @@ export {
   Register,
   Dashboard,
   Login,
+  MediaLibrary,
   Error,
   Logout
 }
