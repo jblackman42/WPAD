@@ -38,7 +38,7 @@ const Home = () => {
         <h1>Getting Started is Easy</h1>
         <ul>
           <li>Choose a Day to Pray.</li>
-          <li>Sign Up For an Hour. (One-Time / Recurring)</li>
+          <li>Sign Up For 30 Minutes of Prayer. (One-Time / Recurring)</li>
           <li>Receive a Text with a Prayer Guide.</li>
         </ul>
       </div>
